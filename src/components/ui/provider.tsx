@@ -6,10 +6,10 @@ import {
   ColorModeProvider,
   type ColorModeProviderProps,
 } from "./color-mode"
-
 import { Provider as ReduxProvider } from "react-redux"
 import { store } from "@/app/store"
-
+import { QueryClientProvider } from "@tanstack/react-query"
+import { queryClient } from "@/app/queryClient"
 interface Props extends ColorModeProviderProps {
   children: ReactNode
 }
@@ -17,11 +17,13 @@ interface Props extends ColorModeProviderProps {
 export function Provider({ children, ...props }: Props) {
   return (
     <ReduxProvider store={store}>
-      <ChakraProvider value={defaultSystem}>
-        <ColorModeProvider {...props}>
-          {children}
-        </ColorModeProvider>
-      </ChakraProvider>
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider value={defaultSystem}>
+          <ColorModeProvider {...props}>
+            {children}
+          </ColorModeProvider>
+        </ChakraProvider>
+      </QueryClientProvider>
     </ReduxProvider>
   )
 }
