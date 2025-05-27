@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import { ChakraProvider, defaultSystem, Theme } from "@chakra-ui/react";
-import { ThemeProvider } from "next-themes";
 import { ColorModeProvider, type ColorModeProviderProps } from "./color-mode";
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "@/app/store";
