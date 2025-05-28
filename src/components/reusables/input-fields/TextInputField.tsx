@@ -33,7 +33,7 @@ const TextInputField: React.FC<TextInputFieldProps> = ({
       <Input
         size={inputSize}
         type={type}
-        className={`w-full rounded-lg px-4 py-2 border text-sm transition focus:outline-none focus:ring-2 ${
+        className={`w-full rounded-lg px-4 py-2 border text-sm text-gray-900 transition focus:outline-none focus:ring-2 ${
           invalid
             ? "border-red-500 focus:ring-red-300"
             : "border-gray-300 focus:ring-indigo-500"
