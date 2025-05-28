@@ -1,6 +1,6 @@
 import React from "react";
 import TextInputField from "@/components/reusables/input-fields/TextInputField";
-import { Button } from "@chakra-ui/react";
+import { Alert, Button } from "@chakra-ui/react";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { useNavigate } from "react-router-dom";
 import { useRegisterUserMutation } from "./authApiQuery";
@@ -38,18 +38,12 @@ const validationSchema = {
 };
 
 const Register: React.FC = () => {
-  const [register] = useRegisterUserMutation();
+  const [register, { isSuccess }] = useRegisterUserMutation();
   const navigation = useNavigate();
-  const { values, errors, handleChange, validateForm } = useFormValidation(
-    initialValues,
-    validationSchema
-  );
+  const { values, errors, handleChange, validateForm, setValues } =
+    useFormValidation(initialValues, validationSchema);
   const handleResetFields = () => {
-    values.name = "";
-    values.email = "";
-    values.password = "";
-    values.confirmPassword = "";
-    values.mobile = "";
+    setValues({ ...initialValues });
   };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,6 +73,12 @@ const Register: React.FC = () => {
           onSubmit={handleSubmit}
           className="w-full max-w-md sm:max-w-lg md:max-w-xl bg-white rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 space-y-6"
         >
+          {isSuccess && (
+            <Alert.Root status="success">
+              <Alert.Indicator />
+              <Alert.Title>You are successfully registered !</Alert.Title>
+            </Alert.Root>
+          )}
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-indigo-600">
             Create an Account
           </h2>

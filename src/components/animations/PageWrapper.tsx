@@ -8,7 +8,7 @@ const pageVariants = {
 };
 
 const pageTransition = {
-  duration: 0.4,
+  duration: 0.15,
   ease: "easeInOut",
 };
 

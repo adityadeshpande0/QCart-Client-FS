@@ -1,6 +1,6 @@
 import React from "react";
 import TextInputField from "@/components/reusables/input-fields/TextInputField";
-import { Button } from "@chakra-ui/react";
+import { Alert, Button } from "@chakra-ui/react";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "./authApiQuery";
@@ -20,17 +20,23 @@ const validationSchema = {
 };
 
 const Login: React.FC = () => {
-  const [loginUser] = useLoginUserMutation();
-  const { values, errors, handleChange, validateForm } = useFormValidation(
-    initialValues,
-    validationSchema
-  );
-
+  const [loginUser, { isSuccess }] = useLoginUserMutation();
+  const { values, errors, handleChange, validateForm, setValues } =
+    useFormValidation(initialValues, validationSchema);
+  const handleResetFields = () => {
+    setValues({ ...initialValues });
+  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log(values.email, values.password);
-      loginUser({ email: values.email, password: values.password });
+      loginUser({ email: values.email, password: values.password })
+        .unwrap()
+        .then(() => {
+          handleResetFields();
+        })
+        .catch((error) => {
+          console.error("Login failed:", error);
+        });
     }
   };
   const navigation = useNavigate();
@@ -41,6 +47,12 @@ const Login: React.FC = () => {
           onSubmit={handleSubmit}
           className="w-full max-w-md sm:max-w-lg md:max-w-xl bg-white rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 space-y-6"
         >
+          {isSuccess && (
+            <Alert.Root status="success">
+              <Alert.Indicator />
+              <Alert.Title>You are successfully logged in !</Alert.Title>
+            </Alert.Root>
+          )}
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-indigo-600">
             Login to Your Account
           </h2>
