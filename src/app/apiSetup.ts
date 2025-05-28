@@ -1,8 +1,18 @@
-import { fetchBaseQuery, type BaseQueryApi, type FetchArgs } from "@reduxjs/toolkit/query/react";
+import {
+  fetchBaseQuery,
+  type BaseQueryApi,
+  type FetchArgs,
+} from "@reduxjs/toolkit/query/react";
 
-const baseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: {}) => {
+const baseQuery = async (
+  args: string | FetchArgs,
+  api: BaseQueryApi,
+  extraOptions: {}
+) => {
   const rawBaseQuery = fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_API_BASE_URL_DEV,
+    baseUrl:
+      import.meta.env.VITE_API_URL ||
+      "https://quickcartnow.vercel.app/api/auth",
     credentials: "include",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
