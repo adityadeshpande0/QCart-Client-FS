@@ -7,10 +7,13 @@ import Register from "@/screens/auth/Register";
 import StoreLanding from "@/screens/landing-page/StoreLanding";
 import Navbar from "@/screens/navbar/Navbar";
 import LocationComponent from "@/screens/LocationComponent";
+import ManageProductsDashboard from "@/admin-related/manage-products/ManageProductsDashboard";
+import AdminDashboard from "@/admin-related/AdminDashboard";
 
 const AppRouter: React.FC = () => {
   const location = useLocation();
-  const hideNavbar = location.pathname === "/login" || location.pathname === "/signup";
+  const hideNavbar =
+    location.pathname === "/login" || location.pathname === "/signup";
 
   return (
     <>
@@ -22,6 +25,14 @@ const AppRouter: React.FC = () => {
             <Route path="/" element={<StoreLanding />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Register />} />
+            <Route
+              path="/manage-products"
+              Component={ManageProductsDashboard}
+            />
+              <Route
+              path="/admin-dashboard"
+              Component={AdminDashboard}
+            />
           </Routes>
         </AnimatePresence>
       </div>

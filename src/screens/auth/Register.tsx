@@ -39,7 +39,6 @@ const validationSchema = {
 
 const Register: React.FC = () => {
   const [register, { isSuccess, isError, data }] = useRegisterUserMutation();
-  console.log(data);
   const navigation = useNavigate();
   const { values, errors, handleChange, validateForm, setValues } =
     useFormValidation(initialValues, validationSchema);

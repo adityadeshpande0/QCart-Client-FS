@@ -20,8 +20,8 @@ const validationSchema = {
 };
 
 const Login: React.FC = () => {
-  const [loginUser, { isSuccess, isError, data, error }] = useLoginUserMutation();
-  // console.log(error?.data?.error);
+  const [loginUser, { isSuccess, isError, data, error }] =
+    useLoginUserMutation();
   const { values, errors, handleChange, validateForm, setValues } =
     useFormValidation(initialValues, validationSchema);
   const handleResetFields = () => {
