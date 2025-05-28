@@ -12,7 +12,6 @@ const Navbar: React.FC = () => {
           <Link to="/" className="text-xl font-bold text-indigo-600">
             Quick cart
           </Link>
-
           <div className="hidden md:flex space-x-4">
             <Link
               to="/login"
@@ -27,8 +26,6 @@ const Navbar: React.FC = () => {
               Register
             </Link>
           </div>
-
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-gray-700"
             onClick={() => setIsOpen(!isOpen)}
