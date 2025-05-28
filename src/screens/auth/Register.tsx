@@ -38,7 +38,8 @@ const validationSchema = {
 };
 
 const Register: React.FC = () => {
-  const [register, { isSuccess }] = useRegisterUserMutation();
+  const [register, { isSuccess, isError, data }] = useRegisterUserMutation();
+  console.log(data);
   const navigation = useNavigate();
   const { values, errors, handleChange, validateForm, setValues } =
     useFormValidation(initialValues, validationSchema);
@@ -65,18 +66,24 @@ const Register: React.FC = () => {
         });
     }
   };
-
+  const alertStatus = isSuccess ? "success" : isError ? "error" : null;
+  const alertMessage = isSuccess
+    ? data?.message || "You are successfully registered !"
+    : isError
+    ? (errors as any)?.data?.error ||
+      "There was an error processing your request"
+    : null;
   return (
-    <PageWrapper>
-      <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center px-4 py-8">
+      <PageWrapper className="w-full max-w-md sm:max-w-lg md:max-w-xl">
         <form
           onSubmit={handleSubmit}
           className="w-full max-w-md sm:max-w-lg md:max-w-xl bg-white rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 space-y-6"
         >
-          {isSuccess && (
-            <Alert.Root status="success">
+          {alertStatus && alertMessage && (
+            <Alert.Root status={alertStatus}>
               <Alert.Indicator />
-              <Alert.Title>You are successfully registered !</Alert.Title>
+              <Alert.Title>{alertMessage}</Alert.Title>
             </Alert.Root>
           )}
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-indigo-600">
@@ -168,8 +175,8 @@ const Register: React.FC = () => {
             </p>
           </div>
         </form>
-      </div>
-    </PageWrapper>
+      </PageWrapper>
+    </div>
   );
 };
 

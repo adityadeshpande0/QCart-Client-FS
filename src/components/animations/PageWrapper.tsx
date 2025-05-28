@@ -11,9 +11,13 @@ const pageTransition = {
   duration: 0.15,
   ease: "easeInOut",
 };
-
-const PageWrapper = ({ children }: { children: React.ReactNode }) => (
+interface PageWrapperProps {
+  children: React.ReactNode;
+  className?: string;
+}
+const PageWrapper = ({ children, className = "" }: PageWrapperProps) => (
   <motion.div
+    className={className}
     initial="initial"
     animate="animate"
     exit="exit"
