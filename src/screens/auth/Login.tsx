@@ -38,6 +38,7 @@ const Login: React.FC = () => {
           if (response?.user?.isAdmin) {
             navigation("/admin-dashboard");
           }
+          handleResetFields();
         })
         .catch((error) => {
           console.error("Login failed:", error);
