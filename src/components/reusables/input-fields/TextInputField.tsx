@@ -3,6 +3,7 @@ import { Field, Input } from "@chakra-ui/react";
 
 interface TextInputFieldProps {
   label: string;
+  type?: string;
   placeholder?: string;
   errorText?: string;
   invalid?: boolean;
@@ -17,6 +18,7 @@ const TextInputField: React.FC<TextInputFieldProps> = ({
   label,
   placeholder,
   errorText,
+  type = "text",
   invalid = false,
   onChange,
   value,
@@ -25,10 +27,11 @@ const TextInputField: React.FC<TextInputFieldProps> = ({
   inputOutline = "1px solid",
 }) => {
   return (
-    <Field.Root className="p-2" invalid={invalid}>
+    <Field.Root invalid={invalid}>
       <Field.Label>{label}</Field.Label>
       <Input
         size={inputSize}
+        type={type}
         className={inputClassName}
         outline={inputOutline}
         onChange={(e) => onChange && onChange(e.target.value)}
