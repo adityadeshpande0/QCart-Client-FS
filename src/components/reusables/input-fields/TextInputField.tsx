@@ -23,22 +23,31 @@ const TextInputField: React.FC<TextInputFieldProps> = ({
   onChange,
   value,
   inputSize,
-  inputClassName = "p-2",
   inputOutline = "1px solid",
 }) => {
   return (
-    <Field.Root invalid={invalid}>
-      <Field.Label>{label}</Field.Label>
+    <Field.Root className="w-full" invalid={invalid}>
+      <Field.Label className="block text-sm font-medium text-gray-700">
+        {label}
+      </Field.Label>
       <Input
         size={inputSize}
         type={type}
-        className={inputClassName}
+        className={`w-full rounded-lg px-4 py-2 border text-sm transition focus:outline-none focus:ring-2 ${
+          invalid
+            ? "border-red-500 focus:ring-red-300"
+            : "border-gray-300 focus:ring-indigo-500"
+        }`}
         outline={inputOutline}
         onChange={(e) => onChange && onChange(e.target.value)}
         placeholder={placeholder}
         value={value}
       />
-      {invalid && <Field.ErrorText>{errorText}</Field.ErrorText>}
+      {invalid && (
+        <Field.ErrorText className="text-sm text-red-500 mt-1">
+          {errorText}
+        </Field.ErrorText>
+      )}
     </Field.Root>
   );
 };
