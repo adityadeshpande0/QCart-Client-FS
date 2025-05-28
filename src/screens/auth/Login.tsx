@@ -1,40 +1,30 @@
-import React, { useState } from "react";
+import React from "react";
 import TextInputField from "@/components/reusables/input-fields/TextInputField";
 import { Button } from "@chakra-ui/react";
+import { useFormValidation } from "@/hooks/useFormValidation";
+
+const initialValues = { email: "", password: "" };
+
+const validationSchema = {
+  email: {
+    required: true,
+    pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+  },
+  password: {
+    required: true,
+    minLength: 6,
+  },
+};
 
 const Login: React.FC = () => {
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (field: "email" | "password", value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-    setErrors((prev) => ({ ...prev, [field]: "" }));
-  };
+  const { values, errors, handleChange, validateForm } = useFormValidation(
+    initialValues,
+    validationSchema
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    let valid = true;
-    let newErrors = { email: "", password: "" };
-
-    if (!form.email) {
-      newErrors.email = "Email is required";
-      valid = false;
-    }
-    if (!form.password) {
-      newErrors.password = "Password is required";
-      valid = false;
-    }
-
-    setErrors(newErrors);
-
-    if (valid) {
+    if (validateForm()) {
       alert("Login submitted!");
     }
   };
@@ -52,8 +42,12 @@ const Login: React.FC = () => {
         <TextInputField
           label="Email Id"
           placeholder="Enter your email"
-          value={form.email}
-          onChange={(val) => handleChange("email", val)}
+          value={values.email}
+          onChange={(val) =>
+            handleChange({
+              target: { name: "email", value: val },
+            } as React.ChangeEvent<HTMLInputElement>)
+          }
           invalid={!!errors.email}
           errorText={errors.email}
         />
@@ -62,8 +56,12 @@ const Login: React.FC = () => {
           label="Password"
           placeholder="Enter your password"
           type="password"
-          value={form.password}
-          onChange={(val) => handleChange("password", val)}
+          value={values.password}
+          onChange={(val) =>
+            handleChange({
+              target: { name: "password", value: val },
+            } as React.ChangeEvent<HTMLInputElement>)
+          }
           invalid={!!errors.password}
           errorText={errors.password}
         />

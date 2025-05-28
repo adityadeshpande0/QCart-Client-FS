@@ -1,70 +1,48 @@
-import React, { useState } from "react";
+import React from "react";
 import TextInputField from "@/components/reusables/input-fields/TextInputField";
 import { Button } from "@chakra-ui/react";
+import { useFormValidation } from "@/hooks/useFormValidation";
+
+const initialValues = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  mobile: "",
+};
+
+const validationSchema = {
+  name: {
+    required: true,
+  },
+  email: {
+    required: true,
+    pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+  },
+  password: {
+    required: true,
+    minLength: 6,
+  },
+  confirmPassword: {
+    required: true,
+    custom: (value: string, values: typeof initialValues) =>
+      value !== values.password ? "Passwords do not match" : null,
+  },
+  mobile: {
+    required: true,
+    pattern: /^[0-9]{10}$/,
+  },
+};
 
 const Register: React.FC = () => {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    mobile: "",
-  });
-
-  const [errors, setErrors] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    mobile: "",
-  });
-
-  const handleChange = (
-    field: "name" | "email" | "password" | "confirmPassword" | "mobile",
-    value: string
-  ) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-    setErrors((prev) => ({ ...prev, [field]: "" }));
-  };
+  const { values, errors, handleChange, validateForm } = useFormValidation(
+    initialValues,
+    validationSchema
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    let valid = true;
-    let newErrors = {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      mobile: "",
-    };
-
-    if (!form.name) {
-      newErrors.name = "Name is required";
-      valid = false;
-    }
-    if (!form.email) {
-      newErrors.email = "Email is required";
-      valid = false;
-    }
-    if (!form.password) {
-      newErrors.password = "Password is required";
-      valid = false;
-    }
-    if (!form.confirmPassword) {
-      newErrors.confirmPassword = "Confirm password is required";
-      valid = false;
-    } else if (form.password !== form.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-      valid = false;
-    }
-    if (!form.mobile) {
-      newErrors.mobile = "Mobile number is required";
-      valid = false;
-    }
-
-    setErrors(newErrors);
-
-    if (valid) {
+    if (validateForm()) {
       alert("Registration submitted!");
     }
   };
@@ -82,8 +60,12 @@ const Register: React.FC = () => {
         <TextInputField
           label="Name"
           placeholder="Enter your name"
-          value={form.name}
-          onChange={(val) => handleChange("name", val)}
+          value={values.name}
+          onChange={(val) =>
+            handleChange({
+              target: { name: "name", value: val },
+            } as React.ChangeEvent<HTMLInputElement>)
+          }
           invalid={!!errors.name}
           errorText={errors.name}
         />
@@ -91,8 +73,12 @@ const Register: React.FC = () => {
         <TextInputField
           label="Email Id"
           placeholder="Enter your email"
-          value={form.email}
-          onChange={(val) => handleChange("email", val)}
+          value={values.email}
+          onChange={(val) =>
+            handleChange({
+              target: { name: "email", value: val },
+            } as React.ChangeEvent<HTMLInputElement>)
+          }
           invalid={!!errors.email}
           errorText={errors.email}
         />
@@ -100,8 +86,12 @@ const Register: React.FC = () => {
         <TextInputField
           label="Mobile Number"
           placeholder="Enter your mobile number"
-          value={form.mobile}
-          onChange={(val) => handleChange("mobile", val)}
+          value={values.mobile}
+          onChange={(val) =>
+            handleChange({
+              target: { name: "mobile", value: val },
+            } as React.ChangeEvent<HTMLInputElement>)
+          }
           invalid={!!errors.mobile}
           errorText={errors.mobile}
         />
@@ -110,8 +100,12 @@ const Register: React.FC = () => {
           label="Password"
           placeholder="Enter your password"
           type="password"
-          value={form.password}
-          onChange={(val) => handleChange("password", val)}
+          value={values.password}
+          onChange={(val) =>
+            handleChange({
+              target: { name: "password", value: val },
+            } as React.ChangeEvent<HTMLInputElement>)
+          }
           invalid={!!errors.password}
           errorText={errors.password}
         />
@@ -120,8 +114,12 @@ const Register: React.FC = () => {
           label="Confirm Password"
           placeholder="Re-enter your password"
           type="password"
-          value={form.confirmPassword}
-          onChange={(val) => handleChange("confirmPassword", val)}
+          value={values.confirmPassword}
+          onChange={(val) =>
+            handleChange({
+              target: { name: "confirmPassword", value: val },
+            } as React.ChangeEvent<HTMLInputElement>)
+          }
           invalid={!!errors.confirmPassword}
           errorText={errors.confirmPassword}
         />
