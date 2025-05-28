@@ -2,6 +2,7 @@ import React from "react";
 import TextInputField from "@/components/reusables/input-fields/TextInputField";
 import { Button } from "@chakra-ui/react";
 import { useFormValidation } from "@/hooks/useFormValidation";
+import { useNavigate } from "react-router-dom";
 
 const initialValues = { email: "", password: "" };
 
@@ -28,7 +29,7 @@ const Login: React.FC = () => {
       alert("Login submitted!");
     }
   };
-
+  const navigation = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center px-4 py-8">
       <form
@@ -72,6 +73,17 @@ const Login: React.FC = () => {
         >
           Login
         </Button>
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-600">
+            Don't have an account?{" "}
+            <span
+              onClick={() => navigation("/signup")}
+              className="text-indigo-600 cursor-pointer hover:underline"
+            >
+              Register here
+            </span>
+          </p>
+        </div>
       </form>
     </div>
   );
