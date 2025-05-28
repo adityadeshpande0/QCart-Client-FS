@@ -3,6 +3,7 @@ import TextInputField from "@/components/reusables/input-fields/TextInputField";
 import { Button } from "@chakra-ui/react";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { useNavigate } from "react-router-dom";
+import { useLoginUserMutation } from "./authApiQuery";
 
 const initialValues = { email: "", password: "" };
 
@@ -18,6 +19,7 @@ const validationSchema = {
 };
 
 const Login: React.FC = () => {
+  const [loginUser] = useLoginUserMutation();
   const { values, errors, handleChange, validateForm } = useFormValidation(
     initialValues,
     validationSchema
@@ -26,6 +28,16 @@ const Login: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
+      console.log(values.email, values.password);
+      loginUser({ email: values.email, password: values.password })
+        .unwrap()
+        .then(() => {
+          alert("Login successful!");
+        })
+        .catch((error: any) => {
+          console.error("Login failed:", error);
+          alert("Login failed. Please check your credentials.");
+        });
       alert("Login submitted!");
     }
   };
