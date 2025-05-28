@@ -9,6 +9,7 @@ import Navbar from "@/screens/navbar/Navbar";
 import LocationComponent from "@/screens/LocationComponent";
 import ManageProductsDashboard from "@/admin-related/manage-products/ManageProductsDashboard";
 import AdminDashboard from "@/admin-related/AdminDashboard";
+import UserProfile from "@/screens/user-profile/UserProfile";
 
 const AppRouter: React.FC = () => {
   const location = useLocation();
@@ -29,10 +30,8 @@ const AppRouter: React.FC = () => {
               path="/manage-products"
               Component={ManageProductsDashboard}
             />
-              <Route
-              path="/admin-dashboard"
-              Component={AdminDashboard}
-            />
+            <Route path="/admin-dashboard" Component={AdminDashboard} />
+            <Route path="/user-profile" Component={UserProfile} />
           </Routes>
         </AnimatePresence>
       </div>

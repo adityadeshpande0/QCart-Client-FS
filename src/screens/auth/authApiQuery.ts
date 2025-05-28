@@ -5,12 +5,6 @@ export const authApiQuery = createApi({
   reducerPath: "authApiQuery",
   baseQuery,
   endpoints: (builder) => ({
-    getUserProfile: builder.query({
-      query: () => ({
-        url: "/get-user-profile",
-        method: "GET",
-      }),
-    }),
     loginUser: builder.mutation({
       query: (credentials) => ({
         url: "/login",
@@ -29,7 +23,6 @@ export const authApiQuery = createApi({
 });
 
 export const {
-  useGetUserProfileQuery,
   useLoginUserMutation,
   useRegisterUserMutation,
 } = authApiQuery;

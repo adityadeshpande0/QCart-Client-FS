@@ -22,6 +22,7 @@ const validationSchema = {
 const Login: React.FC = () => {
   const [loginUser, { isSuccess, isError, data, error }] =
     useLoginUserMutation();
+  console.log(data?.user?.isAdmin, "isAdmin status from login response");
   const { values, errors, handleChange, validateForm, setValues } =
     useFormValidation(initialValues, validationSchema);
   const handleResetFields = () => {
@@ -32,14 +33,18 @@ const Login: React.FC = () => {
     if (validateForm()) {
       loginUser({ email: values.email, password: values.password })
         .unwrap()
-        .then(() => {
-          handleResetFields();
+        .then((response) => {
+          localStorage.setItem("token", response?.token);
+          if (response?.user?.isAdmin) {
+            navigation("/admin-dashboard");
+          }
         })
         .catch((error) => {
           console.error("Login failed:", error);
         });
     }
   };
+
   const navigation = useNavigate();
   const alertStatus = isSuccess ? "success" : isError ? "error" : null;
   const alertMessage = isSuccess

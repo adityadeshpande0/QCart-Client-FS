@@ -38,6 +38,7 @@ const validationSchema = {
 };
 
 const Register: React.FC = () => {
+  console.log(localStorage.getItem("token"));
   const [register, { isSuccess, isError, data }] = useRegisterUserMutation();
   const navigation = useNavigate();
   const { values, errors, handleChange, validateForm, setValues } =
