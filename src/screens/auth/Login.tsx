@@ -9,7 +9,6 @@ import { login } from "./authSlice";
 import { useAppDispatch } from "@/app/hooks";
 
 const initialValues = { email: "", password: "" };
-
 const validationSchema = {
   email: {
     required: true,
@@ -37,9 +36,11 @@ const Login: React.FC = () => {
         .unwrap()
         .then((response) => {
           dispatch(login({ token: response?.token }));
-          // localStorage.setItem("token", response?.token);
+
           if (response?.user?.isAdmin) {
             navigation("/admin-dashboard");
+          }else {
+            navigation("/user-profile");
           }
           handleResetFields();
         })

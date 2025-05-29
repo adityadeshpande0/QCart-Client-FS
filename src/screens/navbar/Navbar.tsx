@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@chakra-ui/react";
-
+import CustomAvatar from "@/components/reusables/Avatar";
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const isLoggedIn = localStorage.getItem("token") !== null;
   const navigate = useNavigate();
-  console.log(isLoggedIn);
   return (
     <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7lg mx-auto px-4 sm:px-6 lg:px-6">
@@ -17,16 +16,11 @@ const Navbar: React.FC = () => {
           </Link>
           <div className="hidden md:flex space-x-4">
             {isLoggedIn ? (
-              <Button
-                onClick={() => {
-                  localStorage.removeItem("token");
-                  window.location.reload();
-                  navigate("/login");
-                }}
-                className="px-4 py-2 rounded-xl text-white bg-red-600 hover:bg-red-700 transition"
-              >
-                Logout
-              </Button>
+              <>
+                <Link to="/user-profile">
+                  <CustomAvatar name={""} src={""} />
+                </Link>
+              </>
             ) : (
               <>
                 <Link
@@ -57,17 +51,7 @@ const Navbar: React.FC = () => {
       {isOpen && (
         <div className="md:hidden px-4 pb-4 space-y-2">
           {isLoggedIn ? (
-            <Button
-              onClick={() => {
-                localStorage.removeItem("token");
-                window.location.reload();
-                navigate("/login");
-                setIsOpen(false);
-              }}
-              className="block w-full text-center px-4 py-2 rounded-xl text-white bg-red-600 hover:bg-red-700 transition"
-            >
-              Logout
-            </Button>
+            <></>
           ) : (
             <>
               <Link
