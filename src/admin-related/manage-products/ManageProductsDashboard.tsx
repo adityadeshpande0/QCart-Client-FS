@@ -1,5 +1,6 @@
 import React from "react";
 import ClickableCard from "@/components/reusables/cards/ClickableCard";
+import { Outlet } from "react-router-dom";
 
 const cardData = [
   {
