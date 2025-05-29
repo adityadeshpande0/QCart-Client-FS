@@ -5,6 +5,8 @@ import { useFormValidation } from "@/hooks/useFormValidation";
 import { useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "./authApiQuery";
 import PageWrapper from "@/components/animations/PageWrapper";
+import { login } from "./authSlice";
+import { useAppDispatch } from "@/app/hooks";
 
 const initialValues = { email: "", password: "" };
 
@@ -20,9 +22,9 @@ const validationSchema = {
 };
 
 const Login: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [loginUser, { isSuccess, isError, data, error }] =
     useLoginUserMutation();
-  console.log(data?.user?.isAdmin, "isAdmin status from login response");
   const { values, errors, handleChange, validateForm, setValues } =
     useFormValidation(initialValues, validationSchema);
   const handleResetFields = () => {
@@ -34,7 +36,8 @@ const Login: React.FC = () => {
       loginUser({ email: values.email, password: values.password })
         .unwrap()
         .then((response) => {
-          localStorage.setItem("token", response?.token);
+          dispatch(login({ token: response?.token }));
+          // localStorage.setItem("token", response?.token);
           if (response?.user?.isAdmin) {
             navigation("/admin-dashboard");
           }
@@ -45,7 +48,6 @@ const Login: React.FC = () => {
         });
     }
   };
-
   const navigation = useNavigate();
   const alertStatus = isSuccess ? "success" : isError ? "error" : null;
   const alertMessage = isSuccess

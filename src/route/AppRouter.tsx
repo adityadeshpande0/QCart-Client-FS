@@ -11,6 +11,7 @@ import ManageProductsDashboard from "@/admin-related/manage-products/ManageProdu
 import AdminDashboard from "@/admin-related/AdminDashboard";
 import UserProfile from "@/screens/user-profile/UserProfile";
 import AddNewProducts from "@/admin-related/manage-products/AddNewProducts";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRouter: React.FC = () => {
   const location = useLocation();
@@ -27,13 +28,15 @@ const AppRouter: React.FC = () => {
             <Route path="/" element={<StoreLanding />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Register />} />
-            <Route
-              path="/manage-products"
-              Component={ManageProductsDashboard}
-            />
-            <Route path="/manage-products/add" Component={AddNewProducts} />
-            <Route path="/admin-dashboard" Component={AdminDashboard} />
-            <Route path="/user-profile" Component={UserProfile} />
+            <Route element={<ProtectedRoute />}>
+              <Route
+                path="/manage-products"
+                Component={ManageProductsDashboard}
+              />
+              <Route path="/manage-products/add" Component={AddNewProducts} />
+              <Route path="/admin-dashboard" Component={AdminDashboard} />
+              <Route path="/user-profile" Component={UserProfile} />
+            </Route>
           </Routes>
         </AnimatePresence>
       </div>
