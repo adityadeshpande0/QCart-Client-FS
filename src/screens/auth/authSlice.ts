@@ -3,16 +3,23 @@ import type { RootState } from "@/app/store";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface User {
-    
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  freeCashBalance: number;
+  isActive: boolean;
+  isAdmin: boolean;
+  profilePicture: string;
 }
 
 interface AuthState {
-  //   user: User | null;
+  user: User | null;
   token: string | null;
 }
 
 const initialState: AuthState = {
-  //   user: JSON.parse(localStorage.getItem("user") || "null"),
+  user: null,
   token: localStorage.getItem("token"),
 };
 
@@ -21,22 +28,26 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action: PayloadAction<{ token: string }>) => {
-      //   state.user = action.payload.user;
       state.token = action.payload.token;
-    //   localStorage.setItem("user", JSON.stringify(action.payload.user));
-      localStorage.setItem("token", action.payload.token);
+      localStorage.setItem("token", action.payload.token); // move this outside reducer
+    },
+    setUserData: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
     },
     logout: (state) => {
-      //   state.user = null;
+      state.user = null;
       state.token = null;
-      localStorage.removeItem("user");
       localStorage.removeItem("token");
     },
   },
 });
+
+// ✅ Selectors
 export const selectToken = (state: RootState) => state.auth.token;
-export const selectIsAuthenticated = (state: RootState) =>
-  Boolean(state.auth.token);
-export const { login, logout } = authSlice.actions;
+export const selectUser = (state: RootState) => state.auth.user;
+export const selectIsAuthenticated = (state: RootState) => Boolean(state.auth.token);
+
+// ✅ Actions
+export const { login, logout, setUserData } = authSlice.actions;
 
 export default authSlice.reducer;

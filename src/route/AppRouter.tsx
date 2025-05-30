@@ -14,6 +14,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import OrdersSection from "@/screens/user-profile/components/OrdersSection";
 import AdressesSection from "@/screens/user-profile/components/AdressesSection";
 import ProfileSection from "@/screens/user-profile/components/ProfileSection";
+import ProductManagement from "@/admin-related/manage-products/ProductManagement";
 
 const AppRouter: React.FC = () => {
   const location = useLocation();
@@ -34,6 +35,10 @@ const AppRouter: React.FC = () => {
               <Route
                 path="/manage-products"
                 Component={ManageProductsDashboard}
+              />
+              <Route
+                path="/manage-products/manage"
+                Component={ProductManagement}
               />
               <Route path="/manage-products/add" Component={AddNewProducts} />
               <Route path="/admin-dashboard" Component={AdminDashboard} />

@@ -1,26 +1,45 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import { Button } from "@chakra-ui/react";
 import CustomAvatar from "@/components/reusables/Avatar";
+import { useGetUserProfileQueryQuery } from "@/app/commonApiQuery";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData, selectUser } from "../auth/authSlice";
+
 const Navbar: React.FC = () => {
+  const dispatch = useDispatch();
+  const { data, isSuccess } = useGetUserProfileQueryQuery({});
+  const user = useSelector(selectUser);
   const [isOpen, setIsOpen] = useState(false);
-  const isLoggedIn = localStorage.getItem("token") !== null;
-  const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem("token");
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      dispatch(setUserData(data));
+    }
+  }, [isSuccess, data, dispatch]);
+
   return (
     <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
-      <div className="max-w-7lg mx-auto px-4 sm:px-6 lg:px-6">
-        <div className="flex justify-between h-16 items-center">
-          <Link to="/" className="text-xl font-bold text-indigo-600">
-            Quick cart
-          </Link>
-          <div className="hidden md:flex space-x-4">
-            {isLoggedIn ? (
-              <>
-                <Link to="/user-profile">
-                  <CustomAvatar name={""} src={""} />
-                </Link>
-              </>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6">
+        <div className="flex justify-between items-center h-16">
+          {/* Left section: Menu icon + Logo */}
+          <div className="flex items-center space-x-4">
+            <Menu className="cursor-pointer" size={20} />
+            <Link to="/" className="text-xl font-bold text-indigo-600">
+              Quick cart
+            </Link>
+          </div>
+
+          {/* Right section: Auth buttons or avatar */}
+          <div className="hidden md:flex space-x-4 items-center">
+            {isLoggedIn && user ? (
+              <Link to="/user-profile">
+                <CustomAvatar
+                  name={user.name}
+                  src={user?.profilePicture || ""}
+                />
+              </Link>
             ) : (
               <>
                 <Link
@@ -38,6 +57,8 @@ const Navbar: React.FC = () => {
               </>
             )}
           </div>
+
+          {/* Mobile toggle button */}
           <button
             className="md:hidden text-gray-700"
             onClick={() => setIsOpen(!isOpen)}
@@ -50,8 +71,14 @@ const Navbar: React.FC = () => {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden px-4 pb-4 space-y-2">
-          {isLoggedIn ? (
-            <></>
+          {isLoggedIn && user ? (
+            <Link
+              to="/user-profile"
+              onClick={() => setIsOpen(false)}
+              className="block w-full text-center px-4 py-2 rounded-xl text-indigo-600 border border-indigo-600 hover:bg-indigo-100 transition"
+            >
+              Profile
+            </Link>
           ) : (
             <>
               <Link
