@@ -1,6 +1,6 @@
 import React from "react";
 import TextInputField from "@/components/reusables/input-fields/TextInputField";
-import { Alert, Button } from "@chakra-ui/react";
+import { Alert, Button, Input, Text } from "@chakra-ui/react";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { useAddNewProductsMutation } from "../apiQueries/adminRelatedApiCalls";
 
@@ -23,17 +23,32 @@ const validationSchema = {
 const AddNewProducts: React.FC = () => {
   const { values, errors, handleChange, validateForm, setValues } =
     useFormValidation(initialValues, validationSchema);
+
   const [addNewProduct, { isError, isSuccess, data }] =
     useAddNewProductsMutation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Submitting product:", values);
+      addNewProduct({ jsonData: values });
       setValues(initialValues);
-      addNewProduct(values);
     }
   };
+
+  const handleExcelUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file); 
+
+    try {
+      await addNewProduct(formData);
+    } catch (error) {
+      console.error("Upload error:", error);
+    }
+  };
+
   const alertStatus = isSuccess ? "success" : isError ? "error" : null;
   const alertMessage = isSuccess
     ? data?.message || "Product added successfully!"
@@ -41,6 +56,7 @@ const AddNewProducts: React.FC = () => {
     ? (errors as any)?.data?.error ||
       "There was an error processing your request"
     : null;
+
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-10 sm:px-6 lg:px-8">
       <form
@@ -48,9 +64,8 @@ const AddNewProducts: React.FC = () => {
         className="max-w-6xl mx-auto bg-white p-6 sm:p-8 md:p-10 rounded-2xl shadow-xl"
       >
         {alertStatus && alertMessage && (
-          <Alert.Root status={alertStatus}>
-            <Alert.Indicator />
-            <Alert.Title>{alertMessage}</Alert.Title>
+          <Alert.Root status={alertStatus} mb={6}>
+            {alertMessage}
           </Alert.Root>
         )}
         <h2 className="text-2xl sm:text-3xl font-bold text-indigo-700 mb-8">
@@ -107,6 +122,20 @@ const AddNewProducts: React.FC = () => {
             }
             invalid={!!errors.stock}
             errorText={errors.stock}
+          />
+        </div>
+
+        {/* Excel Upload */}
+        <div className="mt-8">
+          <Text mb={2}>Upload Excel File (.xlsx)</Text>
+          <Input
+            id="excel-upload"
+            type="file"
+            accept=".xlsx"
+            onChange={handleExcelUpload}
+            bg="gray.50"
+            borderColor="gray.300"
+            _hover={{ borderColor: "gray.400" }}
           />
         </div>
 

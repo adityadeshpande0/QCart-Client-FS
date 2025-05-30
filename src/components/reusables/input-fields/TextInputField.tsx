@@ -4,6 +4,7 @@ import { Field, Input } from "@chakra-ui/react";
 interface TextInputFieldProps {
   label: string;
   type?: string;
+  isDisabled?: boolean;
   placeholder?: string;
   errorText?: string;
   invalid?: boolean;
@@ -18,6 +19,7 @@ const TextInputField: React.FC<TextInputFieldProps> = ({
   label,
   placeholder,
   errorText,
+  isDisabled = false,
   type = "text",
   invalid = false,
   onChange,
@@ -32,6 +34,7 @@ const TextInputField: React.FC<TextInputFieldProps> = ({
       </Field.Label>
       <Input
         size={inputSize}
+        disabled={isDisabled}
         type={type}
         className={`w-full rounded-lg px-4 py-2 border text-sm text-gray-900 transition focus:outline-none focus:ring-2 ${
           invalid
