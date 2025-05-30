@@ -1,6 +1,6 @@
 import React from "react";
 import TextInputField from "@/components/reusables/input-fields/TextInputField";
-import { Button } from "@chakra-ui/react";
+import { Alert, Button } from "@chakra-ui/react";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { useAddNewProductsMutation } from "../apiQueries/adminRelatedApiCalls";
 
@@ -23,7 +23,8 @@ const validationSchema = {
 const AddNewProducts: React.FC = () => {
   const { values, errors, handleChange, validateForm, setValues } =
     useFormValidation(initialValues, validationSchema);
-  const [addNewProduct] = useAddNewProductsMutation();
+  const [addNewProduct, { isError, isSuccess, data }] =
+    useAddNewProductsMutation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,13 +34,25 @@ const AddNewProducts: React.FC = () => {
       addNewProduct(values);
     }
   };
-
+  const alertStatus = isSuccess ? "success" : isError ? "error" : null;
+  const alertMessage = isSuccess
+    ? data?.message || "Product added successfully!"
+    : isError
+    ? (errors as any)?.data?.error ||
+      "There was an error processing your request"
+    : null;
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-10 sm:px-6 lg:px-8">
       <form
         onSubmit={handleSubmit}
         className="max-w-6xl mx-auto bg-white p-6 sm:p-8 md:p-10 rounded-2xl shadow-xl"
       >
+        {alertStatus && alertMessage && (
+          <Alert.Root status={alertStatus}>
+            <Alert.Indicator />
+            <Alert.Title>{alertMessage}</Alert.Title>
+          </Alert.Root>
+        )}
         <h2 className="text-2xl sm:text-3xl font-bold text-indigo-700 mb-8">
           Add New Product
         </h2>
