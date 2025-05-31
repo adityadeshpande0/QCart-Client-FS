@@ -1,9 +1,8 @@
 // pages/MainScreen.tsx (or wherever)
 import React, { useState } from "react";
-import { Box, SimpleGrid } from "@chakra-ui/react";
+import { Box, SimpleGrid, Text } from "@chakra-ui/react";
 import ProductCard from "@/components/reusables/cards/ProductCard";
 import CategoryTabs from "@/components/reusables/tabs/CategoryTabs";
-
 
 const products = [
   {
@@ -44,7 +43,7 @@ const products = [
   },
 ];
 
-const categories = ["furniture", "lighting", "appliances"];
+const categories = ["furniture", "lighting", "appliances", "decor", "kitchen"];
 
 const MainScreen: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
@@ -60,20 +59,25 @@ const MainScreen: React.FC = () => {
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
       />
-
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap="6">
-        {filteredProducts.map(({ id, title, price, image }) => (
-          <ProductCard
-            key={id}
-            title={title}
-            price={price}
-            image={image}
-            onAddToCart={(qty) =>
-              console.log(`Added ${qty} of ${title} to cart`)
-            }
-          />
-        ))}
-      </SimpleGrid>
+      {filteredProducts.length === 0 ? (
+        <Text className="text-center text-gray-500 text-sm mt-10">
+          No products to display in this category.
+        </Text>
+      ) : (
+        <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap="6">
+          {filteredProducts.map(({ id, title, price, image }) => (
+            <ProductCard
+              key={id}
+              title={title}
+              price={price}
+              image={image}
+              onAddToCart={(qty) =>
+                console.log(`Added ${qty} of ${title} to cart`)
+              }
+            />
+          ))}
+        </SimpleGrid>
+      )}
     </Box>
   );
 };
