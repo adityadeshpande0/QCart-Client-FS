@@ -54,7 +54,7 @@ const MainScreen: React.FC = () => {
   );
 
   return (
-    <Box p="4" mx="auto" >
+    <Box p="4" mx="auto">
       <CategoryTabs
         categories={categories}
         selectedCategory={selectedCategory}
