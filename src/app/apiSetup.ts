@@ -12,7 +12,7 @@ const baseQuery = async (
   const rawBaseQuery = fetchBaseQuery({
     baseUrl:
       import.meta.env.VITE_API_URL ||
-      "https://quickcartnow.vercel.app/api/auth",
+      "http://localhost:5000/api/auth",
     credentials: "include",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
