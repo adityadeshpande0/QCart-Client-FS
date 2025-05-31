@@ -16,6 +16,7 @@ import AdressesSection from "@/screens/user-profile/components/AdressesSection";
 import ProfileSection from "@/screens/user-profile/components/ProfileSection";
 import ProductManagement from "@/admin-related/manage-products/ProductManagement";
 import MainScreen from "@/screens/dashboard/MainScreen";
+import Profile from "@/experiments/Profile";
 
 const AppRouter: React.FC = () => {
   const location = useLocation();
@@ -34,6 +35,7 @@ const AppRouter: React.FC = () => {
             <Route path="/signup" element={<Register />} />
             <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<MainScreen />} />
+            <Route path="/exp" element={<Profile />} />
               <Route
                 path="/manage-products"
                 Component={ManageProductsDashboard}
