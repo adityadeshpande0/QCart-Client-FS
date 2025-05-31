@@ -15,6 +15,7 @@ import OrdersSection from "@/screens/user-profile/components/OrdersSection";
 import AdressesSection from "@/screens/user-profile/components/AdressesSection";
 import ProfileSection from "@/screens/user-profile/components/ProfileSection";
 import ProductManagement from "@/admin-related/manage-products/ProductManagement";
+import MainScreen from "@/screens/dashboard/MainScreen";
 
 const AppRouter: React.FC = () => {
   const location = useLocation();
@@ -32,6 +33,7 @@ const AppRouter: React.FC = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Register />} />
             <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<MainScreen />} />
               <Route
                 path="/manage-products"
                 Component={ManageProductsDashboard}
