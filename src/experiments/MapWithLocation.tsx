@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { useCurrentLocation } from "@/hooks/useCurrentLocation"; // adjust the path if needed
 
-// Fix icon issues with Leaflet
+// Fix leaflet default icon issues
 delete (L.Icon.Default as any).prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconUrl: "https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png",
@@ -21,29 +22,20 @@ const SetView = ({ coords }: { coords: [number, number] }) => {
 };
 
 const MapWithLocation: React.FC = () => {
+  const { location, error } = useCurrentLocation();
   const [position, setPosition] = useState<[number, number] | null>(null);
 
-  // Fetch user geolocation only once on mount
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords;
-        setPosition([latitude, longitude]);
-      },
-      (err) => {
-        console.error("Geolocation error", err);
-        // Optional: fallback to a default position
-        setPosition([18.5204, 73.8567]); // Pune coordinates fallback
-      }
-    );
-  }, []);
+    if (location) {
+      setPosition([location.latitude, location.longitude]);
+    }
+  }, [location]);
 
   const handleDragEnd = async (e: L.LeafletEvent) => {
     const marker = e.target;
     const newPos = marker.getLatLng();
     setPosition([newPos.lat, newPos.lng]);
 
-    // Reverse geocode example (optional)
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${newPos.lat}&lon=${newPos.lng}`
@@ -55,7 +47,7 @@ const MapWithLocation: React.FC = () => {
     }
   };
 
-  if (!position) return <p>Loading location...</p>;
+  if (!position) return <p>{error || "Loading location..."}</p>;
 
   return (
     <MapContainer center={position} zoom={13} style={{ height: "400px", width: "100%" }}>
