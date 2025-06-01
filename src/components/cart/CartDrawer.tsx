@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import type { RootState } from "@/app/store";
 import { selectUser } from "@/screens/auth/authSlice";
-import { closeCart, selectCartItems } from "@/screens/slices/cartSlice";
+import { closeCart, decrementQuantity, incrementQuantity, selectCartItems } from "@/screens/slices/cartSlice";
 import {
   Box,
   Button,
@@ -50,21 +50,55 @@ const CartDrawer = forwardRef<CartDrawerHandle>((_, ref) => {
               </Drawer.CloseTrigger>
             </Drawer.Header>
             <Drawer.Body className="px-4 py-5 space-y-4 text-sm text-gray-700">
-              {cartData.length === 0 ? (
-                <Box>
-                  <Text textAlign="center" className="text-gray-500 text-md">
-                    Your cart is currently empty.
-                  </Text>
-                  <Button
-                    className="mt-4 w-full bg-black text-white hover:bg-gray-800 transition"
-                    onClick={handleClose}
-                  >
-                    <Text className="text-white">Continue Shopping</Text>
-                  </Button>
+              {cartData.map((item) => (
+                <Box
+                  key={item.id}
+                  className="flex items-center justify-between border border-gray-100 rounded-lg p-3 shadow-sm hover:shadow-md transition"
+                >
+                  <Box className="flex items-center gap-3">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-12 h-12 rounded object-cover"
+                    />
+                    <Box>
+                      <Text className="font-semibold text-sm text-gray-800 line-clamp-1">
+                        {item.name}
+                      </Text>
+                      <Text className="text-xs text-gray-500">
+                        {item.units}
+                      </Text>
+                    </Box>
+                  </Box>
+
+                  <Box className="flex items-center gap-3">
+                    <Box className="flex items-center border border-pink-200 text-pink-600 rounded-md px-2 py-1 text-sm font-medium">
+                      <button
+                        className="px-1"
+                        onClick={() => dispatch(decrementQuantity(item.id))}
+                      >
+                        −
+                      </button>
+                      <Text className="px-2">{item.quantity}</Text>
+                      <button
+                        className="px-1"
+                        onClick={() => dispatch(incrementQuantity(item.id))}
+                      >
+                        +
+                      </button>
+                    </Box>
+
+                    <Box className="text-right">
+                      <Text className="text-black font-semibold text-sm">
+                        ₹{item.price}
+                      </Text>
+                      <Text className="text-xs text-gray-400 line-through">
+                        ₹{Math.round(item.price * 1.5)}
+                      </Text>
+                    </Box>
+                  </Box>
                 </Box>
-              ) : (
-                <>some data</>
-              )}
+              ))}
             </Drawer.Body>
             {cartData.length > 0 && (
               <Drawer.Footer className="flex justify-between items-center gap-4 px-4 py-4 border-t">

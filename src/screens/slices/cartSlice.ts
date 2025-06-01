@@ -1,68 +1,66 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+// cartSlice.ts
+import type { RootState } from '@/app/store';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 interface CartItem {
   id: number;
   name: string;
   price: number;
   quantity: number;
-  image?: string;
+  image: string;
   units?: string;
 }
 
 interface CartState {
-  isOpen: boolean;
   items: CartItem[];
+  isOpen: boolean;
 }
 
 const initialState: CartState = {
-  isOpen: false,
   items: [],
+  isOpen: false,
 };
 
-const cartHandlerSlice = createSlice({
-  name: "cartReducer",
+const cartSlice = createSlice({
+  name: 'cart',
   initialState,
   reducers: {
-    openCart: (state) => {
-      state.isOpen = true;
-    },
-    closeCart: (state) => {
-      state.isOpen = false;
-    },
-    toggleCart: (state) => {
-      state.isOpen = !state.isOpen;
-    },
-    addToCart: (state, action) => {
-      const existingItem = state.items.find(
-        (item) => item.id === action.payload.id
-      );
-
-      if (existingItem) {
-        existingItem.quantity += action.payload.quantity;
+    addToCart: (state, action: PayloadAction<CartItem>) => {
+      const existing = state.items.find(item => item.id === action.payload.id);
+      if (existing) {
+        existing.quantity += action.payload.quantity;
       } else {
         state.items.push(action.payload);
       }
     },
-
-    removeFromCart: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter((item) => item.id !== action.payload);
+    incrementQuantity: (state, action: PayloadAction<Number>) => {
+      const item = state.items.find(item => item.id === action.payload);
+      if (item) item.quantity += 1;
     },
-    clearCart: (state) => {
-      state.items = [];
+    decrementQuantity: (state, action: PayloadAction<Number>) => {
+      const item = state.items.find(item => item.id === action.payload);
+      if (item && item.quantity > 1) item.quantity -= 1;
+      else if (item && item.quantity === 1) {
+        state.items = state.items.filter(i => i.id !== action.payload);
+      }
+    },
+    closeCart: (state) => {
+      state.isOpen = false;
+    },
+    openCart: (state) => {
+      state.isOpen = true;
     },
   },
 });
 
-export const selectCartItems = (state: { cartReducer: CartState }) =>
-  state.cartReducer.items;
-
 export const {
-  openCart,
-  closeCart,
-  toggleCart,
   addToCart,
-  removeFromCart,
-  clearCart,
-} = cartHandlerSlice.actions;
+  incrementQuantity,
+  decrementQuantity,
+  closeCart,
+  openCart,
+} = cartSlice.actions;
 
-export default cartHandlerSlice.reducer;
+export const selectCartItems = (state: RootState) => state.cartReducer.items;
+
+export default cartSlice.reducer;
