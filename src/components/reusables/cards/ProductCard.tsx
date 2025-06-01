@@ -1,86 +1,105 @@
-import { Button, Card, Image, Text, HStack } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAppDispatch } from "@/app/hooks";
+import { addToCart } from "@/screens/slices/cartSlice";
 
 interface ProductCardProps {
+  id: number;
   title: string;
-  price: number | string;
+  price: number ;
   image: string;
-  onAddToCart?: (quantity: number) => void;
+  units?: string;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
+  id,
   title,
   price,
   image,
-  onAddToCart,
+  units,
 }) => {
   const [quantity, setQuantity] = useState(0);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (quantity > 0) {
+      dispatch(
+        addToCart({
+          id,
+          name: title,
+          price,
+          quantity,
+          image,
+          units,
+        })
+      );
+    }
+  }, [quantity, dispatch, id, title, price, image, units]);
 
   const handleAddToCart = () => {
     setQuantity(1);
-    onAddToCart?.(1);
   };
 
   const increment = () => {
-    setQuantity((prev) => {
-      const newQty = prev + 1;
-      onAddToCart?.(newQty);
-      return newQty;
-    });
+    setQuantity((prev) => prev + 1);
   };
 
   const decrement = () => {
-    setQuantity((prev) => {
-      const newQty = prev > 1 ? prev - 1 : 0;
-      onAddToCart?.(newQty);
-      return newQty;
-    });
+    setQuantity((prev) => (prev > 1 ? prev - 1 : 0));
   };
 
   return (
-    <Card.Root className="w-full max-w-[90%] sm:max-w-sm md:max-w-xs lg:max-w-[280px] border border-gray-200 bg-white hover:shadow-md transition duration-300 text-sm rounded-lg overflow-hidden">
-      <Image
-        src={image}
-        alt={title}
-        className="w-full h-40 sm:h-44 md:h-48 object-cover"
-      />
-      <Card.Body className="px-4 py-3 space-y-2">
-        <Card.Title className="text-base sm:text-lg font-semibold">
+    <div className="max-w-[280px] w-full bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col">
+      <div className="w-full h-40 sm:h-44 md:h-48 overflow-hidden rounded-t-lg">
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+          loading="lazy"
+        />
+      </div>
+
+      <div className="p-4 flex flex-col flex-grow">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate" title={title}>
           {title}
-        </Card.Title>
-        <Text className="text-lg font-bold">${price}</Text>
-      </Card.Body>
-      <Card.Footer className="flex justify-between items-center px-4 py-3">
+        </h3>
+        <div className="mt-1 flex items-baseline space-x-2">
+          <span className="text-lg font-bold text-gray-800">₹  {price}</span>
+          {units && (
+            <span className="text-sm text-gray-500">{units}</span>
+          )}
+        </div>
+      </div>
+
+      <div className="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
         {quantity === 0 ? (
-          <Button
+          <button
             onClick={handleAddToCart}
-            size="sm"
-            className="bg-black text-white hover:bg-gray-300 hover:text-black px-4 py-2 text-sm sm:text-base"
-            variant="ghost"
+            className="flex-grow bg-black text-white text-center py-2 rounded-md text-sm sm:text-base font-semibold hover:bg-gray-800 transition-colors"
+            type="button"
           >
             Add to cart
-          </Button>
+          </button>
         ) : (
-          <HStack gap={2}>
-            <Button
+          <div className="flex items-center space-x-3">
+            <button
               onClick={decrement}
-              size="xs"
-              className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 text-sm"
+              className="bg-gray-200 hover:bg-gray-300 text-gray-700 rounded px-3 py-1 text-lg font-semibold select-none transition-colors"
+              type="button"
             >
-              −
-            </Button>
-            <Text className="text-sm font-medium">{quantity}</Text>
-            <Button
+              &minus;
+            </button>
+            <span className="text-sm font-medium w-6 text-center select-none">{quantity}</span>
+            <button
               onClick={increment}
-              size="xs"
-              className="bg-gray-800 hover:bg-gray-300 text-white px-3 py-1 text-sm"
+              className="bg-black hover:bg-gray-800 text-white rounded px-3 py-1 text-lg font-semibold select-none transition-colors"
+              type="button"
             >
               +
-            </Button>
-          </HStack>
+            </button>
+          </div>
         )}
-      </Card.Footer>
-    </Card.Root>
+      </div>
+    </div>
   );
 };
 

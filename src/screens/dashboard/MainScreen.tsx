@@ -5,12 +5,13 @@ import CategoryTabs from "@/components/reusables/tabs/CategoryTabs";
 import { useGetAllProductsQuery } from "@/admin-related/apiQueries/adminRelatedApiCalls";
 
 type Product = {
-  id: number;
+  _id: number;
   title: string;
   description: string;
   price: number;
   category: string;
   image: string;
+  units: string;
 };
 
 const MainScreen: React.FC = () => {
@@ -43,7 +44,7 @@ const MainScreen: React.FC = () => {
   const filteredProducts = data.products.filter(
     (product: Product) => product.category === selectedCategory
   );
-
+  console.log(filteredProducts, "filteredProducts");
   return (
     <Box p="4" mx="auto">
       <CategoryTabs
@@ -57,17 +58,18 @@ const MainScreen: React.FC = () => {
         </Text>
       ) : (
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap="6">
-          {filteredProducts.map(({ id, title, price, image }: Product) => (
-            <ProductCard
-              key={id}
-              title={title}
-              price={price}
-              image={image}
-              onAddToCart={(id) =>
-                console.log(`Added ${id} of ${title} to cart`)
-              }
-            />
-          ))}
+          {filteredProducts.map(
+            ({ _id, title, price, image, units }: Product) => (
+              <ProductCard
+                key={_id}
+                title={title}
+                price={price}
+                image={image}
+                id={_id}
+                units={units}
+              />
+            )
+          )}
         </SimpleGrid>
       )}
     </Box>

@@ -6,17 +6,22 @@ import CustomAvatar from "@/components/reusables/Avatar";
 import { useGetUserProfileQueryQuery } from "@/app/commonApiQuery";
 import { useSelector } from "react-redux";
 import { setUserData, selectUser } from "../auth/authSlice";
-import { Button } from "@chakra-ui/react";
+import { Badge, Button } from "@chakra-ui/react";
 import { openCart } from "../slices/cartSlice";
-import { useAppDispatch } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import type { RootState } from "@/app/store";
 
 const Navbar: React.FC = () => {
-  const dispatch = useAppDispatch();
   const { data, isSuccess } = useGetUserProfileQueryQuery({});
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector(
+    (state: RootState) => state.cartReducer.items
+  );
+
   const user = useSelector(selectUser);
   const [isOpen, setIsOpen] = useState(false);
   const isLoggedIn = !!localStorage.getItem("token");
-
+  const cartCount = cartItems.length;
   useEffect(() => {
     if (isSuccess && data) {
       dispatch(setUserData(data));
@@ -64,6 +69,20 @@ const Navbar: React.FC = () => {
             )}
             <Button onClick={handleNavbarOpen}>
               <ShoppingCart />
+              {cartCount > 0 && (
+                <Badge
+                  bg="red.500"
+                  colorScheme="red"
+                  borderRadius="full"
+                  position="absolute"
+                  top="-1"
+                  right="-1"
+                  fontSize="0.7em"
+                  px="2"
+                >
+                  {cartCount}
+                </Badge>
+              )}
             </Button>
           </div>
 
