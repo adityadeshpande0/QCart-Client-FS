@@ -30,12 +30,13 @@ const AppRouter: React.FC = () => {
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/location" element={<LocationComponent />} />
-            <Route path="/" element={<StoreLanding />} />
+            <Route path="/" element={<MainScreen />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Register />} />
-            <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<MainScreen />} />
             <Route path="/exp" element={<Profile />} />
+            <Route element={<ProtectedRoute />}>
+              {/* <Route path="/dashboard" element={<MainScreen />} /> */}
+
               <Route
                 path="/manage-products"
                 Component={ManageProductsDashboard}
