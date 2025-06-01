@@ -89,7 +89,7 @@ const UserProfile: React.FC = () => {
         {/* Menu Items */}
         <VStack gap={1} mt={6} align="stretch">
           {menuData.map(({ label, icon: IconComponent, path }, i) => (
-            <Link to={path} key={i}>
+            <Link to={`/user-profile/${path}`} key={i}>
               <Flex
                 align="center"
                 gap={3}

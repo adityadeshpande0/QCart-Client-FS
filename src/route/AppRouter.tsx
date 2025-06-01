@@ -39,15 +39,15 @@ const AppRouter: React.FC = () => {
 
               <Route
                 path="/manage-products"
-                Component={ManageProductsDashboard}
+                element={<ManageProductsDashboard />}
               />
               <Route
                 path="/manage-products/manage"
-                Component={ProductManagement}
+                element={<ProductManagement />}
               />
-              <Route path="/manage-products/add" Component={AddNewProducts} />
-              <Route path="/admin-dashboard" Component={AdminDashboard} />
-              <Route path="/user-profile" Component={UserProfile}>
+              <Route path="/manage-products/add" element={<AddNewProducts />} />
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/user-profile" element={<UserProfile />}>
                 <Route path="orders" element={<OrdersSection />} />
                 <Route path="addresses" element={<AdressesSection />} />
                 <Route path="Profile" element={<ProfileSection />} />

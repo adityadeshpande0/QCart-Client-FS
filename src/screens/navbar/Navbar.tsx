@@ -26,7 +26,6 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           {/* Left section: Menu icon + Logo */}
           <div className="flex items-center space-x-4">
-            <Menu className="cursor-pointer" size={20} />
             <Link to="/" className="text-xl font-bold text-indigo-600">
               Quick cart
             </Link>
