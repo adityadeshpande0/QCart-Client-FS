@@ -32,7 +32,6 @@ const Navbar: React.FC = () => {
   const handleNavbarOpen = () => {
     dispatch(openCart());
   };
-  console.log(data);
 
   const filterAddressToOneLine = (addresses: any[] = []) => {
     if (!addresses.length) return "";
@@ -44,7 +43,6 @@ const Navbar: React.FC = () => {
   };
 
   const address = filterAddressToOneLine(data?.user?.addresses);
-  console.log(address);
 
   return (
     <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">

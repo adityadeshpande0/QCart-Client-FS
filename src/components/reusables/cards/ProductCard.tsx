@@ -1,6 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useAppDispatch } from "@/app/hooks";
-import { addToCart } from "@/screens/slices/cartSlice";
+import React from "react";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import {
+  addToCart,
+  decrementQuantity,
+  incrementQuantity,
+  selectCartItems,
+} from "@/screens/slices/cartSlice";
 
 interface ProductCardProps {
   id: number;
@@ -17,40 +22,22 @@ const ProductCard: React.FC<ProductCardProps> = ({
   image,
   units,
 }) => {
-  const [quantity, setQuantity] = useState(0);
   const dispatch = useAppDispatch();
-  const firstRender = useRef(true);
-
-  useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
-
-    if (quantity > 0) {
-      dispatch(
-        addToCart({
-          id,
-          name: title,
-          price,
-          quantity: 1,
-          image,
-          units,
-        })
-      );
-    }
-  }, [quantity]);
+  const cartItems = useAppSelector(selectCartItems);
+  const cartItem = cartItems.find((item) => item.id === id);
+  const quantity = cartItem?.quantity ?? 0;
 
   const handleAddToCart = () => {
-    setQuantity(1);
-  };
-
-  const increment = () => {
-    setQuantity(prev => prev + 1); 
-  };
-
-  const decrement = () => {
-    setQuantity(prev => (prev > 1 ? prev - 1 : 0));
+    dispatch(
+      addToCart({
+        id,
+        name: title,
+        price,
+        quantity: 1,
+        image,
+        units,
+      })
+    );
   };
 
   return (
@@ -65,14 +52,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       <div className="p-4 flex flex-col flex-grow">
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate" title={title}>
+        <h3
+          className="text-base sm:text-lg font-semibold text-gray-900 truncate"
+          title={title}
+        >
           {title}
         </h3>
         <div className="mt-1 flex items-baseline space-x-2">
           <span className="text-lg font-bold text-gray-800">₹ {price}</span>
-          {units && (
-            <span className="text-sm text-gray-500">{units}</span>
-          )}
+          {units && <span className="text-sm text-gray-500">{units}</span>}
         </div>
       </div>
 
@@ -88,15 +76,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
         ) : (
           <div className="flex items-center space-x-3">
             <button
-              onClick={decrement}
+              onClick={() => dispatch(decrementQuantity(id))}
               className="bg-gray-200 hover:bg-gray-300 text-gray-700 rounded px-3 py-1 text-lg font-semibold select-none transition-colors"
               type="button"
             >
               &minus;
             </button>
-            <span className="text-sm font-medium w-6 text-center select-none">{quantity}</span>
+            <span className="text-sm font-medium w-6 text-center select-none">
+              {quantity}
+            </span>
             <button
-              onClick={increment}
+              onClick={() => dispatch(incrementQuantity(id))}
               className="bg-black hover:bg-gray-800 text-white rounded px-3 py-1 text-lg font-semibold select-none transition-colors"
               type="button"
             >

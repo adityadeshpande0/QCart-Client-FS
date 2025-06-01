@@ -1,6 +1,6 @@
 // cartSlice.ts
-import type { RootState } from '@/app/store';
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { RootState } from "@/app/store";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface CartItem {
   id: number;
@@ -22,11 +22,13 @@ const initialState: CartState = {
 };
 
 const cartSlice = createSlice({
-  name: 'cart',
+  name: "cart",
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
-      const existing = state.items.find(item => item.id === action.payload.id);
+      const existing = state.items.find(
+        (item) => item.id === action.payload.id
+      );
       if (existing) {
         existing.quantity += action.payload.quantity;
       } else {
@@ -34,14 +36,14 @@ const cartSlice = createSlice({
       }
     },
     incrementQuantity: (state, action: PayloadAction<Number>) => {
-      const item = state.items.find(item => item.id === action.payload);
+      const item = state.items.find((item) => item.id === action.payload);
       if (item) item.quantity += 1;
     },
     decrementQuantity: (state, action: PayloadAction<Number>) => {
-      const item = state.items.find(item => item.id === action.payload);
+      const item = state.items.find((item) => item.id === action.payload);
       if (item && item.quantity > 1) item.quantity -= 1;
       else if (item && item.quantity === 1) {
-        state.items = state.items.filter(i => i.id !== action.payload);
+        state.items = state.items.filter((i) => i.id !== action.payload);
       }
     },
     closeCart: (state) => {
@@ -62,5 +64,7 @@ export const {
 } = cartSlice.actions;
 
 export const selectCartItems = (state: RootState) => state.cartReducer.items;
+export const selectCartTotalCount = (state: RootState) =>
+  state.cartReducer.items.reduce((sum, item) => sum + item.quantity, 0);
 
 export default cartSlice.reducer;

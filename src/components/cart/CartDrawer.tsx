@@ -1,7 +1,12 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import type { RootState } from "@/app/store";
 import { selectUser } from "@/screens/auth/authSlice";
-import { closeCart, decrementQuantity, incrementQuantity, selectCartItems } from "@/screens/slices/cartSlice";
+import {
+  closeCart,
+  decrementQuantity,
+  incrementQuantity,
+  selectCartItems,
+} from "@/screens/slices/cartSlice";
 import {
   Box,
   Button,
@@ -32,9 +37,6 @@ const CartDrawer = forwardRef<CartDrawerHandle>((_, ref) => {
 
   const cartData = useAppSelector(selectCartItems);
   const userData = useAppSelector(selectUser);
-  console.log(cartData);
-  console.log(userData);
-
   return (
     <Drawer.Root open={isOpen}>
       <Portal>
