@@ -1,55 +1,45 @@
-// pages/MainScreen.tsx (or wherever)
 import React, { useState } from "react";
 import { Box, SimpleGrid, Text } from "@chakra-ui/react";
 import ProductCard from "@/components/reusables/cards/ProductCard";
 import CategoryTabs from "@/components/reusables/tabs/CategoryTabs";
+import { useGetAllProductsQuery } from "@/admin-related/apiQueries/adminRelatedApiCalls";
 
-const products = [
-  {
-    id: 1,
-    title: "Living Room Sofa",
-    description: "Perfect for modern or baroque-inspired interiors.",
-    price: 450,
-    category: "furniture",
-    image:
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1770&q=80",
-  },
-  {
-    id: 2,
-    title: "Modern Lamp",
-    description: "Stylish lamp to light up your living room.",
-    price: 120,
-    category: "lighting",
-    image:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 3,
-    title: "Office Chair",
-    description: "Ergonomic chair for your workspace.",
-    price: 250,
-    category: "furniture",
-    image:
-      "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 4,
-    title: "Ceiling Fan",
-    description: "Keep cool with this modern ceiling fan.",
-    price: 180,
-    category: "appliances",
-    image:
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=800&q=80",
-  },
-];
-
-const categories = ["furniture", "lighting", "appliances", "decor", "kitchen"];
+type Product = {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+  image: string;
+};
 
 const MainScreen: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const { data, isLoading } = useGetAllProductsQuery({});
 
-  const filteredProducts = products.filter(
-    (product) => product.category === selectedCategory
+  // Always define hooks at the top level
+  const categories = data?.products
+    ? Array.from(new Set(data.products.map((d: any) => d.category))) as string[]
+    : [];
+
+  const [selectedCategory, setSelectedCategory] = useState(categories[0] || "");
+
+  // Keep selectedCategory in sync if categories change
+  React.useEffect(() => {
+    if (categories.length > 0 && !categories.includes(selectedCategory)) {
+      setSelectedCategory(categories[0]);
+    }
+  }, [categories, selectedCategory]);
+
+  if (isLoading || !data || !data.products) {
+    return (
+      <Box p="4" mx="auto">
+        <Text>Loading...</Text>
+      </Box>
+    );
+  }
+
+  const filteredProducts = data.products.filter(
+    (product: Product) => product.category === selectedCategory
   );
 
   return (
@@ -65,7 +55,7 @@ const MainScreen: React.FC = () => {
         </Text>
       ) : (
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap="6">
-          {filteredProducts.map(({ id, title, price, image }) => (
+          {filteredProducts.map(({ id, title, price, image }: Product) => (
             <ProductCard
               key={id}
               title={title}

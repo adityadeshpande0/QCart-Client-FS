@@ -1,4 +1,3 @@
-
 import { Tabs } from "@chakra-ui/react";
 import React from "react";
 
@@ -19,8 +18,14 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
       onValueChange={(details) => onCategoryChange(details.value)}
       className="mb-6"
     >
-      <div className="overflow-x-auto">
-        <Tabs.List className="flex whitespace-nowrap space-x-4 border-b border-gray-300 pb-2 min-w-full">
+      <div
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}
+        className="overflow-x-auto"
+      >
+        <Tabs.List className="flex whitespace-nowrap space-x-4 pb-2 min-w-full">
           {categories.map((category) => (
             <Tabs.Trigger
               key={category}
