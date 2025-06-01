@@ -11,7 +11,13 @@ export const userProfileApiQueries = createApi({
         method: "GET",
       }),
     }),
+    getOrders: builder.query({
+      query: () => ({
+        url: "/get-recent-orders",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetAddressesQuery } = userProfileApiQueries;
+export const { useGetAddressesQuery, useGetOrdersQuery } = userProfileApiQueries;

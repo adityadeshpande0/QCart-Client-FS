@@ -4,6 +4,7 @@ import { commonApiQuery } from "./commonApiQuery";
 import authReducer from "../screens/auth/authSlice";
 import { adminRelatedApiQuery } from "@/admin-related/apiQueries/adminRelatedApiCalls";
 import { userProfileApiQueries } from "@/screens/user-profile/userProfileApiQueries";
+import cartHandlerSlice from "../screens/slices/cartSlice";
 export const store = configureStore({
   reducer: {
     [authApiQuery.reducerPath]: authApiQuery.reducer,
@@ -11,6 +12,7 @@ export const store = configureStore({
     [adminRelatedApiQuery.reducerPath]: adminRelatedApiQuery.reducer,
     [userProfileApiQueries.reducerPath]: userProfileApiQueries.reducer,
     auth: authReducer,
+    cartReducer: cartHandlerSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()

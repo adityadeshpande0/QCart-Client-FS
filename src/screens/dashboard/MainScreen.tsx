@@ -18,7 +18,9 @@ const MainScreen: React.FC = () => {
 
   // Always define hooks at the top level
   const categories = data?.products
-    ? Array.from(new Set(data.products.map((d: any) => d.category))) as string[]
+    ? (Array.from(
+        new Set(data.products.map((d: any) => d.category))
+      ) as string[])
     : [];
 
   const [selectedCategory, setSelectedCategory] = useState(categories[0] || "");
@@ -61,8 +63,8 @@ const MainScreen: React.FC = () => {
               title={title}
               price={price}
               image={image}
-              onAddToCart={(qty) =>
-                console.log(`Added ${qty} of ${title} to cart`)
+              onAddToCart={(id) =>
+                console.log(`Added ${id} of ${title} to cart`)
               }
             />
           ))}

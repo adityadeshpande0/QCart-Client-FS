@@ -32,8 +32,8 @@ const UserProfile: React.FC = () => {
     );
   }
   const menuData = [
-    { label: "Orders", icon: LuShoppingBag, path: "orders" },
-    { label: "Addresses", icon: LuMapPin, path: "addresses" },
+    { label: "Past Orders", icon: LuShoppingBag, path: "orders" },
+    { label: "Saved Addresses", icon: LuMapPin, path: "addresses" },
     { label: "Profile", icon: LuUser, path: "profile" },
   ];
   return (

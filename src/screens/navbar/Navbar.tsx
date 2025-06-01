@@ -4,11 +4,14 @@ import { Menu, X } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import CustomAvatar from "@/components/reusables/Avatar";
 import { useGetUserProfileQueryQuery } from "@/app/commonApiQuery";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { setUserData, selectUser } from "../auth/authSlice";
+import { Button } from "@chakra-ui/react";
+import { openCart } from "../slices/cartSlice";
+import { useAppDispatch } from "@/app/hooks";
 
 const Navbar: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { data, isSuccess } = useGetUserProfileQueryQuery({});
   const user = useSelector(selectUser);
   const [isOpen, setIsOpen] = useState(false);
@@ -20,11 +23,14 @@ const Navbar: React.FC = () => {
     }
   }, [isSuccess, data, dispatch]);
 
+  const handleNavbarOpen = () => {
+    dispatch(openCart());
+  };
+
   return (
     <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6">
         <div className="flex justify-between items-center h-16">
-          {/* Left section: Menu icon + Logo */}
           <div className="flex items-center space-x-4">
             <Link to="/" className="text-xl font-bold text-indigo-600">
               Quick cart
@@ -52,11 +58,13 @@ const Navbar: React.FC = () => {
                   to="/signup"
                   className="px-4 py-2 rounded-xl border border-indigo-600 text-indigo-600 hover:bg-indigo-100 transition"
                 >
-                  Register
+                  Registers
                 </Link>
               </>
             )}
-            <ShoppingCart />
+            <Button onClick={handleNavbarOpen}>
+              <ShoppingCart />
+            </Button>
           </div>
 
           {/* Mobile toggle button */}
