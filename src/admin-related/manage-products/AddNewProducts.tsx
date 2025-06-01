@@ -7,20 +7,32 @@ import { HardDriveUpload } from "lucide-react";
 import SelectInputField from "@/components/reusables/input-fields/SelectInputField";
 import { productCategories } from "../utils/SelectorValues";
 
+const unitOptions = [
+  { label: "Pieces", value: "pcs" },
+  { label: "Kilograms", value: "kg" },
+  { label: "Liters", value: "liters" },
+  { label: "Meters", value: "meters" },
+  { label: "Packs", value: "packs" },
+];
+
 const initialValues = {
   title: "",
   category: "",
   price: "",
   image: "",
   stock: "",
+  units: "",
+  unitValue: "",
 };
 
 const validationSchema = {
   title: { required: true },
   category: { required: true },
-  price: { required: true, pattern: /^\d+$/ },
+  price: { required: true, pattern: /^\d+(\.\d{1,2})?$/ },
   image: { required: true },
   stock: { required: true, pattern: /^\d+$/ },
+  units: { required: true },
+  unitValue: { required: false, pattern: /^\d+(\.\d+)?$/ },
 };
 
 const AddNewProducts: React.FC = () => {
@@ -30,16 +42,22 @@ const AddNewProducts: React.FC = () => {
 
   const [addNewProduct, { isError, isSuccess, data }] =
     useAddNewProductsMutation();
+
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setExcelFile(file);
-    }
+    if (file) setExcelFile(file);
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      addNewProduct(values);
+      const payload = {
+        ...values,
+        price: parseFloat(values.price),
+        stock: parseInt(values.stock),
+        unitValue: values.unitValue ? parseFloat(values.unitValue) : undefined,
+      };
+      addNewProduct(payload);
       setValues(initialValues);
     }
   };
@@ -73,6 +91,7 @@ const AddNewProducts: React.FC = () => {
         </div>
       )}
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
+        {/* Bulk Upload */}
         <div className="bg-white p-6 sm:p-8 md:p-10 rounded-2xl shadow-xl flex flex-col justify-between">
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4">
@@ -106,6 +125,8 @@ const AddNewProducts: React.FC = () => {
             </Button>
           </div>
         </div>
+
+        {/* Manual Form */}
         <form
           onSubmit={handleSubmit}
           className="bg-white p-6 sm:p-8 md:p-10 rounded-2xl shadow-xl"
@@ -131,9 +152,7 @@ const AddNewProducts: React.FC = () => {
               value={values.category}
               options={productCategories}
               onChange={(val) =>
-                handleChange({
-                  target: { name: "category", value: val },
-                } as any)
+                handleChange({ target: { name: "category", value: val } } as any)
               }
               invalid={!!errors.category}
               errorText={errors.category}
@@ -167,6 +186,27 @@ const AddNewProducts: React.FC = () => {
               }
               invalid={!!errors.stock}
               errorText={errors.stock}
+            />
+            <SelectInputField
+              label="Units"
+              placeholder="Select units"
+              value={values.units}
+              options={unitOptions}
+              onChange={(val) =>
+                handleChange({ target: { name: "units", value: val } } as any)
+              }
+              invalid={!!errors.units}
+              errorText={errors.units}
+            />
+            <TextInputField
+              label="Unit Value"
+              placeholder="Optional (e.g. 0.5)"
+              value={values.unitValue}
+              onChange={(val) =>
+                handleChange({ target: { name: "unitValue", value: val } } as any)
+              }
+              invalid={!!errors.unitValue}
+              errorText={errors.unitValue}
             />
           </div>
 

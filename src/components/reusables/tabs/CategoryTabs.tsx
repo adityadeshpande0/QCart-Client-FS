@@ -32,7 +32,10 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
               value={category}
               className="px-4 py-2 shrink-0 cursor-pointer data-[state=active]:border-b-2 data-[state=active]:border-black data-[state=active]:font-semibold"
             >
-              {category.charAt(0).toUpperCase() + category.slice(1)}
+              {category
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, (c) => c.toUpperCase())
+              .replace(/Ice Creams/i, "Ice Cream")}
             </Tabs.Trigger>
           ))}
         </Tabs.List>

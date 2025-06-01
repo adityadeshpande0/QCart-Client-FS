@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import CustomAvatar from "@/components/reusables/Avatar";
 import { useGetUserProfileQueryQuery } from "@/app/commonApiQuery";
 import { useDispatch, useSelector } from "react-redux";
@@ -56,6 +57,7 @@ const Navbar: React.FC = () => {
                 </Link>
               </>
             )}
+            <ShoppingCart />
           </div>
 
           {/* Mobile toggle button */}
