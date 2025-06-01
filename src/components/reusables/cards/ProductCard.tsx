@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAppDispatch } from "@/app/hooks";
 import { addToCart } from "@/screens/slices/cartSlice";
 
 interface ProductCardProps {
   id: number;
   title: string;
-  price: number ;
+  price: number;
   image: string;
   units?: string;
 }
@@ -19,32 +19,38 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const [quantity, setQuantity] = useState(0);
   const dispatch = useAppDispatch();
+  const firstRender = useRef(true);
 
   useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+
     if (quantity > 0) {
       dispatch(
         addToCart({
           id,
           name: title,
           price,
-          quantity,
+          quantity: 1,
           image,
           units,
         })
       );
     }
-  }, [quantity, dispatch, id, title, price, image, units]);
+  }, [quantity]);
 
   const handleAddToCart = () => {
     setQuantity(1);
   };
 
   const increment = () => {
-    setQuantity((prev) => prev + 1);
+    setQuantity(prev => prev + 1); 
   };
 
   const decrement = () => {
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 0));
+    setQuantity(prev => (prev > 1 ? prev - 1 : 0));
   };
 
   return (
@@ -63,7 +69,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {title}
         </h3>
         <div className="mt-1 flex items-baseline space-x-2">
-          <span className="text-lg font-bold text-gray-800">₹  {price}</span>
+          <span className="text-lg font-bold text-gray-800">₹ {price}</span>
           {units && (
             <span className="text-sm text-gray-500">{units}</span>
           )}

@@ -32,9 +32,18 @@ const cartHandlerSlice = createSlice({
     toggleCart: (state) => {
       state.isOpen = !state.isOpen;
     },
-    addToCart: (state, action: PayloadAction<CartItem>) => {
-      state.items.push(action.payload);
+    addToCart: (state, action) => {
+      const existingItem = state.items.find(
+        (item) => item.id === action.payload.id
+      );
+
+      if (existingItem) {
+        existingItem.quantity += action.payload.quantity;
+      } else {
+        state.items.push(action.payload);
+      }
     },
+
     removeFromCart: (state, action: PayloadAction<number>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
@@ -43,6 +52,9 @@ const cartHandlerSlice = createSlice({
     },
   },
 });
+
+export const selectCartItems = (state: { cartReducer: CartState }) =>
+  state.cartReducer.items;
 
 export const {
   openCart,

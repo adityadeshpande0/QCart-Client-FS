@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { ChevronDownIcon, Menu, X } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import CustomAvatar from "@/components/reusables/Avatar";
 import { useGetUserProfileQueryQuery } from "@/app/commonApiQuery";
 import { useSelector } from "react-redux";
 import { setUserData, selectUser } from "../auth/authSlice";
-import { Badge, Button } from "@chakra-ui/react";
+import { Badge, Box, Button, Flex, Text, VStack } from "@chakra-ui/react";
 import { openCart } from "../slices/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import type { RootState } from "@/app/store";
@@ -22,6 +22,7 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const isLoggedIn = !!localStorage.getItem("token");
   const cartCount = cartItems.length;
+
   useEffect(() => {
     if (isSuccess && data) {
       dispatch(setUserData(data));
@@ -31,16 +32,43 @@ const Navbar: React.FC = () => {
   const handleNavbarOpen = () => {
     dispatch(openCart());
   };
+  console.log(data);
+
+  const filterAddressToOneLine = (addresses: any[] = []) => {
+    if (!addresses.length) return "";
+    const addr = addresses.find((a) => a.isDefault) || addresses[0];
+    // Compose: label - street, city
+    return `${addr.label ? addr.label + " - " : ""}${addr.street}, ${
+      addr.city
+    }, ${addr.state} ${addr.zipCode}`;
+  };
+
+  const address = filterAddressToOneLine(data?.user?.addresses);
+  console.log(address);
 
   return (
     <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-4">
+          <Flex align="center" gap={6}>
             <Link to="/" className="text-xl font-bold text-indigo-600">
-              Quick cart
+              Quicko
             </Link>
-          </div>
+            <VStack gap={0} align="start">
+              <Text fontWeight="semibold" fontSize="sm">
+                Delivery in{" "}
+                <Box as="span" color="pink.500" fontWeight="bold">
+                  7 Mins
+                </Box>
+              </Text>
+              <Flex align="center">
+                <Text fontSize="xs" color="gray.600" truncate maxW="180px">
+                  {address || "No address selected"}
+                </Text>
+                <ChevronDownIcon />
+              </Flex>
+            </VStack>
+          </Flex>
 
           {/* Right section: Auth buttons or avatar */}
           <div className="hidden md:flex space-x-4 items-center">

@@ -17,7 +17,6 @@ type Product = {
 const MainScreen: React.FC = () => {
   const { data, isLoading } = useGetAllProductsQuery({});
 
-  // Always define hooks at the top level
   const categories = data?.products
     ? (Array.from(
         new Set(data.products.map((d: any) => d.category))
@@ -26,7 +25,6 @@ const MainScreen: React.FC = () => {
 
   const [selectedCategory, setSelectedCategory] = useState(categories[0] || "");
 
-  // Keep selectedCategory in sync if categories change
   React.useEffect(() => {
     if (categories.length > 0 && !categories.includes(selectedCategory)) {
       setSelectedCategory(categories[0]);
@@ -44,7 +42,6 @@ const MainScreen: React.FC = () => {
   const filteredProducts = data.products.filter(
     (product: Product) => product.category === selectedCategory
   );
-  console.log(filteredProducts, "filteredProducts");
   return (
     <Box p="4" mx="auto">
       <CategoryTabs
