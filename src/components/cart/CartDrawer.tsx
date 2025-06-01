@@ -1,12 +1,13 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import type { RootState } from "@/app/store";
-import { selectUser } from "@/screens/auth/authSlice";
+import { selectAddressId, selectUser } from "@/screens/auth/authSlice";
 import {
   closeCart,
   decrementQuantity,
   incrementQuantity,
   selectCartItems,
 } from "@/screens/slices/cartSlice";
+import { usePlaceOrderMutation } from "@/screens/user-profile/userProfileApiQueries";
 import {
   Box,
   Button,
@@ -23,9 +24,14 @@ export interface CartDrawerHandle {
 }
 
 const CartDrawer = forwardRef<CartDrawerHandle>((_, ref) => {
-  const isOpen = useAppSelector((state: RootState) => state.cartReducer.isOpen);
+  const [placeOrder] = usePlaceOrderMutation();
   const dispatch = useAppDispatch();
   const { onOpen } = useDisclosure();
+
+  const isOpen = useAppSelector((state: RootState) => state.cartReducer.isOpen);
+  const cartData = useAppSelector(selectCartItems);
+  const userData = useAppSelector(selectUser);
+  const addressId = useAppSelector(selectAddressId);
 
   useImperativeHandle(ref, () => ({
     openDrawer: onOpen,
@@ -35,8 +41,26 @@ const CartDrawer = forwardRef<CartDrawerHandle>((_, ref) => {
     dispatch(closeCart());
   };
 
-  const cartData = useAppSelector(selectCartItems);
-  const userData = useAppSelector(selectUser);
+  const payload = {
+    products: cartData.map((item) => ({
+      productId: item.id,
+      quantity: item.quantity,
+    })),
+    addressId,
+  };
+
+  console.log("User Data:", userData);
+  console.log("Payload:", payload);
+  const handleCheckout = async () => {
+    try {
+      const response = await placeOrder(payload).unwrap();
+      console.log("Order placed successfully:", response);
+      dispatch(closeCart());
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  };
+
   return (
     <Drawer.Root open={isOpen}>
       <Portal>
@@ -104,7 +128,10 @@ const CartDrawer = forwardRef<CartDrawerHandle>((_, ref) => {
             </Drawer.Body>
             {cartData.length > 0 && (
               <Drawer.Footer className="flex justify-between items-center gap-4 px-4 py-4 border-t">
-                <Button className="w-full bg-black text-white hover:bg-gray-800 transition">
+                <Button
+                  onClick={handleCheckout}
+                  className="w-full bg-black text-white hover:bg-gray-800 transition"
+                >
                   Checkout
                 </Button>
               </Drawer.Footer>

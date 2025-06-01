@@ -113,6 +113,7 @@ const OrdersSection: React.FC = () => {
             <Box w="120px">
               {order.status !== "Cancelled" && (
                 <Button
+                  className="w-full bg-black text-white hover:bg-gray-800 transition"
                   size="sm"
                   colorScheme="red"
                   onClick={() => handleCancelOrder(order._id)}

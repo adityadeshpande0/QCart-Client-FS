@@ -5,7 +5,7 @@ import { ShoppingCart } from "lucide-react";
 import CustomAvatar from "@/components/reusables/Avatar";
 import { useGetUserProfileQueryQuery } from "@/app/commonApiQuery";
 import { useSelector } from "react-redux";
-import { setUserData, selectUser } from "../auth/authSlice";
+import { setUserData, selectUser, setUserAddressId } from "../auth/authSlice";
 import { Badge, Box, Button, Flex, Text, VStack } from "@chakra-ui/react";
 import { openCart } from "../slices/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
@@ -25,7 +25,8 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     if (isSuccess && data) {
-      dispatch(setUserData(data));
+      dispatch(setUserData(data.user));
+      dispatch(setUserAddressId(data.user.addresses?.[0]?._id || null));
     }
   }, [isSuccess, data, dispatch]);
 

@@ -17,7 +17,14 @@ export const userProfileApiQueries = createApi({
         method: "GET",
       }),
     }),
+    placeOrder: builder.mutation({
+      query: (orderData) => ({
+        url: "/place-order",
+        method: "POST",
+        body: orderData,
+      }),
+    }),
   }),
 });
 
-export const { useGetAddressesQuery, useGetOrdersQuery } = userProfileApiQueries;
+export const { useGetAddressesQuery, useGetOrdersQuery, usePlaceOrderMutation } = userProfileApiQueries;
