@@ -111,7 +111,7 @@ const UserProfile: React.FC = () => {
             variant="ghost"
             onClick={() => {
               localStorage.removeItem("token");
-              navigate("/login");
+              navigate("/");
             }}
             color="gray.600"
             _hover={{ textDecoration: "underline" }}

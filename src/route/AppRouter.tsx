@@ -18,6 +18,7 @@ import ProductManagement from "@/admin-related/manage-products/ProductManagement
 import MainScreen from "@/screens/dashboard/MainScreen";
 import Profile from "@/experiments/Profile";
 import CartDrawer from "@/components/cart/CartDrawer";
+import ManageOrders from "@/admin-related/manage-orders/ManageOrders";
 
 const AppRouter: React.FC = () => {
   const location = useLocation();
@@ -36,8 +37,15 @@ const AppRouter: React.FC = () => {
             <Route path="/signup" element={<Register />} />
             <Route path="/exp" element={<Profile />} />
             <Route element={<ProtectedRoute />}>
-              <Route path="/manage-products" element={<ManageProductsDashboard />} />
-              <Route path="/manage-products/manage" element={<ProductManagement />} />
+              <Route
+                path="/manage-products"
+                element={<ManageProductsDashboard />}
+              />
+              <Route path="/manage-orders" element={<ManageOrders />} />
+              <Route
+                path="/manage-products/manage"
+                element={<ProductManagement />}
+              />
               <Route path="/manage-products/add" element={<AddNewProducts />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="/user-profile" element={<UserProfile />}>

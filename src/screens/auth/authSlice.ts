@@ -12,17 +12,30 @@ interface User {
   isAdmin: boolean;
   profilePicture: string;
 }
+interface Address {
+  _id: string;
+  label: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  isDefault: boolean;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+}
 
 interface AuthState {
   user: User | null;
   token: string | null;
-  addressId?: string | null;
+  address: Address | null;
 }
 
 const initialState: AuthState = {
   user: null,
   token: localStorage.getItem("token"),
-  addressId: null,
+  address: null,
 };
 
 const authSlice = createSlice({
@@ -36,8 +49,8 @@ const authSlice = createSlice({
     setUserData: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
-    setUserAddressId: (state, action: PayloadAction<string>) => {
-      state.addressId = action.payload;
+    setUserAddress: (state, action: PayloadAction<Address>) => {
+      state.address = action.payload;
     },
     logout: (state) => {
       state.user = null;
@@ -48,11 +61,11 @@ const authSlice = createSlice({
 });
 
 export const selectToken = (state: RootState) => state.auth.token;
-export const selectAddressId = (state: RootState) => state.auth.addressId;
+export const selectAddress = (state: RootState) => state.auth.address;
 export const selectUser = (state: RootState) => state.auth.user;
 export const selectIsAuthenticated = (state: RootState) =>
   Boolean(state.auth.token);
 
-export const { login, logout, setUserData,setUserAddressId } = authSlice.actions;
+export const { login, logout, setUserData, setUserAddress } = authSlice.actions;
 
 export default authSlice.reducer;

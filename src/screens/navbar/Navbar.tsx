@@ -5,7 +5,7 @@ import { ShoppingCart } from "lucide-react";
 import CustomAvatar from "@/components/reusables/Avatar";
 import { useGetUserProfileQueryQuery } from "@/app/commonApiQuery";
 import { useSelector } from "react-redux";
-import { setUserData, selectUser, setUserAddressId } from "../auth/authSlice";
+import { setUserData, selectUser, setUserAddress } from "../auth/authSlice";
 import { Badge, Box, Button, Flex, Text, VStack } from "@chakra-ui/react";
 import { openCart } from "../slices/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     if (isSuccess && data) {
       dispatch(setUserData(data.user));
-      dispatch(setUserAddressId(data.user.addresses?.[0]?._id || null));
+      dispatch(setUserAddress(data.user.addresses?.[0] || null));
     }
   }, [isSuccess, data, dispatch]);
 
@@ -37,7 +37,6 @@ const Navbar: React.FC = () => {
   const filterAddressToOneLine = (addresses: any[] = []) => {
     if (!addresses.length) return "";
     const addr = addresses.find((a) => a.isDefault) || addresses[0];
-    // Compose: label - street, city
     return `${addr.label ? addr.label + " - " : ""}${addr.street}, ${
       addr.city
     }, ${addr.state} ${addr.zipCode}`;
@@ -69,31 +68,14 @@ const Navbar: React.FC = () => {
             </VStack>
           </Flex>
 
-          {/* Right section: Auth buttons or avatar */}
           <div className="hidden md:flex space-x-4 items-center">
-            {isLoggedIn && user ? (
-              <Link to="/user-profile">
-                <CustomAvatar
-                  name={user.name}
-                  src={user?.profilePicture || ""}
-                />
-              </Link>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="px-4 py-2 rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/signup"
-                  className="px-4 py-2 rounded-xl border border-indigo-600 text-indigo-600 hover:bg-indigo-100 transition"
-                >
-                  Registers
-                </Link>
-              </>
-            )}
+            <Link to="/user-profile">
+              <CustomAvatar
+                name={user?.name || "User"}
+                src={user?.profilePicture || "profile image"}
+              />
+            </Link>
+
             <Button onClick={handleNavbarOpen}>
               <ShoppingCart />
               {cartCount > 0 && (
