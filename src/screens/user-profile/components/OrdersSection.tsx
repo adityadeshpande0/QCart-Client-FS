@@ -14,15 +14,22 @@ import {
   Button,
   Flex,
 } from "@chakra-ui/react";
-import { useGetOrdersQuery } from "../userProfileApiQueries";
+import {
+  useCancelOrderMutation,
+  useGetOrdersQuery,
+} from "../userProfileApiQueries";
 import { AlertCircleIcon } from "lucide-react";
 
 const OrdersSection: React.FC = () => {
   const { data, isLoading, isError } = useGetOrdersQuery({});
+  const [cancelOrder] = useCancelOrderMutation();
 
   const handleCancelOrder = (orderId: string) => {
-    console.log("Cancel Order ID:", orderId);
-    // You can later replace this with an API call to cancel the order
+    cancelOrder(orderId)
+      .unwrap()
+      .then(() => {
+        console.log("Order cancelled successfully");
+      });
   };
 
   if (isLoading) {

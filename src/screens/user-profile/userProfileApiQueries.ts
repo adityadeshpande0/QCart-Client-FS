@@ -24,7 +24,18 @@ export const userProfileApiQueries = createApi({
         body: orderData,
       }),
     }),
+    cancelOrder: builder.mutation({
+      query: (orderId) => ({
+        url: `/cancel-order/${orderId}`,
+        method: "PUT",
+      }),
+    }),
   }),
 });
 
-export const { useGetAddressesQuery, useGetOrdersQuery, usePlaceOrderMutation } = userProfileApiQueries;
+export const {
+  useGetAddressesQuery,
+  useGetOrdersQuery,
+  usePlaceOrderMutation,
+  useCancelOrderMutation,
+} = userProfileApiQueries;
