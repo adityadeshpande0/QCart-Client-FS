@@ -9,10 +9,25 @@ import {
   Separator,
 } from "@chakra-ui/react";
 import { LuMapPin, LuPencil, LuTrash2 } from "react-icons/lu";
-import { useGetAddressesQuery } from "../userProfileApiQueries";
+import {
+  useDeleteAddressMutation,
+  useGetAddressesQuery,
+} from "../userProfileApiQueries";
 
 const AdressesSection: React.FC = () => {
-  const { data } = useGetAddressesQuery({});
+  const { data, refetch } = useGetAddressesQuery({});
+  const [deleteSavedAddress] = useDeleteAddressMutation();
+
+  const handleDeleteAddress = async (addressId: string) => {
+    try {
+      await deleteSavedAddress(addressId).unwrap();
+      await refetch();
+      // Optionally, you can show a success message or refresh the addresses
+    } catch (error) {
+      console.error("Failed to delete address:", error);
+      // Optionally, show an error message
+    }
+  };
 
   const formatAddress = (address: any) => {
     const { street, city, state, zipCode, country } = address;
@@ -26,7 +41,7 @@ const AdressesSection: React.FC = () => {
           All Saved Addresses
         </Text>
         <Button
-          className="bg-blue-500 hover:bg-pink-600 text-white"
+          className="bg-blue-500 hover:bg-blue-600 text-white"
           onClick={() => {}}
           size="sm"
           variant="solid"
@@ -91,13 +106,15 @@ const AdressesSection: React.FC = () => {
               cursor="pointer"
               _hover={{ color: "gray.700" }}
             />
-            <Icon
-              as={LuTrash2}
-              boxSize={5}
-              color="gray.500"
-              cursor="pointer"
-              _hover={{ color: "red.500" }}
-            />
+            <Button onClick={() => handleDeleteAddress(address._id)}>
+              <Icon
+                as={LuTrash2}
+                boxSize={5}
+                color="gray.500"
+                cursor="pointer"
+                _hover={{ color: "red.500" }}
+              />
+            </Button>
           </HStack>
         </Flex>
       ))}

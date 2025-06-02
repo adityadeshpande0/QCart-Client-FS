@@ -11,6 +11,12 @@ export const userProfileApiQueries = createApi({
         method: "GET",
       }),
     }),
+    deleteAddress: builder.mutation({
+      query: (addressId) => ({
+        url: `/delete-address/${addressId}`,
+        method: "DELETE",
+      }),
+    }),
     getOrders: builder.query({
       query: () => ({
         url: "/get-recent-orders",
@@ -38,4 +44,5 @@ export const {
   useGetOrdersQuery,
   usePlaceOrderMutation,
   useCancelOrderMutation,
+  useDeleteAddressMutation,
 } = userProfileApiQueries;
