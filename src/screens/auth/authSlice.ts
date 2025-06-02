@@ -3,6 +3,8 @@ import type { RootState } from "@/app/store";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface User {
+  createdAt: string | number | Date;
+  updatedAt: string | number | Date;
   name: string;
   email: string;
   phone: string;

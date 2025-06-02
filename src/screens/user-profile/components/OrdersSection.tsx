@@ -92,28 +92,33 @@ const OrdersSection: React.FC = () => {
           </Text>
           <Separator mb={3} />
           <Stack gap={4}>
-            {order.products.map((item: any) => (
-              <HStack key={item._id} align="start">
-                <Image
-                  boxSize="60px"
-                  objectFit="cover"
-                  src={
-                    item.productId.image !== "na"
-                      ? item.productId.image
-                      : undefined
-                  }
-                  alt={item.productId.title}
-                  borderRadius="md"
-                />
-                <Box flex="1">
-                  <Text fontWeight="semibold">{item.productId.title}</Text>
-                  <Text fontSize="sm" color="gray.600">
-                    {item.quantity} × ₹{item.price} / {item.productId.units}
-                  </Text>
-                </Box>
-                <Text fontWeight="bold">₹{item.subtotal}</Text>
-              </HStack>
-            ))}
+            {order.products.map((item: any) =>
+              item.productId ? (
+                <HStack key={item._id} align="start">
+                  <Image
+                    boxSize="60px"
+                    objectFit="cover"
+                    src={
+                      item.productId?.image && item.productId.image !== "na"
+                        ? item.productId.image
+                        : undefined
+                    }
+                    alt={item.productId?.title || "Product image"}
+                    borderRadius="md"
+                  />
+                  <Box flex="1">
+                    <Text fontWeight="semibold">
+                      {item.productId?.title || "Unknown Product"}
+                    </Text>
+                    <Text fontSize="sm" color="gray.600">
+                      {item.quantity} × ₹{item.price} /{" "}
+                      {item.productId?.units || "unit"}
+                    </Text>
+                  </Box>
+                  <Text fontWeight="bold">₹{item.subtotal}</Text>
+                </HStack>
+              ) : null
+            )}
           </Stack>
           <Separator my={3} />
           <Flex justify="space-between" align="center" mt={3}>
