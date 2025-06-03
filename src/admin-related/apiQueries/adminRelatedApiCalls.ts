@@ -45,6 +45,20 @@ export const adminRelatedApiQuery = createApi({
         method: "DELETE",
       }),
     }),
+    getAllOrders: builder.query({
+      query: () => ({
+        url: "/get-orders",
+        method: "GET",
+      }),
+    }),
+    updateOrderStatus: builder.mutation({
+      query: ({ orderId, status }) => ({
+        url: `/orders/${orderId}/status`,
+        method: "PUT",
+        body: { status },
+        headers: { "Content-Type": "application/json" },
+      }),
+    }),
   }),
 });
 
@@ -53,4 +67,6 @@ export const {
   useGetAllProductsQuery,
   useEditProductMutation,
   useDeleteProductMutation,
+  useGetAllOrdersQuery,
+  useUpdateOrderStatusMutation,
 } = adminRelatedApiQuery;

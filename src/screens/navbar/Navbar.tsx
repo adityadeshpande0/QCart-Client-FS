@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
   const toggleAdminNavMenu = useAppSelector(selectAdminNavmenuIsOpen);
   const user = useSelector(selectUser);
 
-  const isLoggedIn = !!localStorage.getItem("token");
+  // const isLoggedIn = !!localStorage.getItem("token");
   const cartCount = cartItems.length;
   const isAdmin = user?.isAdmin;
 

@@ -13,6 +13,7 @@ interface User {
   isActive: boolean;
   isAdmin: boolean;
   profilePicture: string;
+  _id: string;
 }
 interface Address {
   _id: string;

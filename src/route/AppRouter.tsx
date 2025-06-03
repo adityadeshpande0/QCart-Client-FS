@@ -3,7 +3,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Login from "@/screens/auth/Login";
 import Register from "@/screens/auth/Register";
-import StoreLanding from "@/screens/landing-page/StoreLanding";
+// import StoreLanding from "@/screens/landing-page/StoreLanding";
 import Navbar from "@/screens/navbar/Navbar";
 import LocationComponent from "@/screens/LocationComponent";
 import ManageProductsDashboard from "@/admin-related/manage-products/ManageProductsDashboard";
