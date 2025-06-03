@@ -13,11 +13,12 @@ import {
   useDeleteAddressMutation,
   useGetAddressesQuery,
 } from "../userProfileApiQueries";
+import { useNavigate } from "react-router-dom";
 
 const AdressesSection: React.FC = () => {
   const { data, refetch } = useGetAddressesQuery({});
   const [deleteSavedAddress] = useDeleteAddressMutation();
-
+const navigation = useNavigate();
   const handleDeleteAddress = async (addressId: string) => {
     try {
       await deleteSavedAddress(addressId).unwrap();
@@ -42,7 +43,7 @@ const AdressesSection: React.FC = () => {
         </Text>
         <Button
           className="bg-blue-500 hover:bg-blue-600 text-white"
-          onClick={() => {}}
+          onClick={() => {navigation("/user-profile/addNewAddress")}}
           size="sm"
           variant="solid"
           boxShadow="md"
@@ -68,7 +69,6 @@ const AdressesSection: React.FC = () => {
 
       <Separator />
 
-      {/* Address Cards */}
       {data?.addresses?.map((address: any, idx: number) => (
         <Flex
           key={address._id || idx}
@@ -80,7 +80,6 @@ const AdressesSection: React.FC = () => {
           align="flex-start"
           className="hover:shadow-md transition-all"
         >
-          {/* Left - Icon and Address */}
           <HStack align="flex-start" gap={3}>
             <Icon as={LuMapPin} boxSize={5} color="purple.500" mt={1} />
             <Box>
@@ -96,8 +95,6 @@ const AdressesSection: React.FC = () => {
               </Text>
             </Box>
           </HStack>
-
-          {/* Right - Actions */}
           <HStack gap={3}>
             <Icon
               as={LuPencil}

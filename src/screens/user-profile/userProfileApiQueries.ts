@@ -36,6 +36,13 @@ export const userProfileApiQueries = createApi({
         method: "PUT",
       }),
     }),
+    updateAddress: builder.mutation({
+      query: (addressData) => ({
+        url: "/addaddress",
+        method: "POST",
+        body: addressData,
+      }),
+    }),
   }),
 });
 
@@ -45,4 +52,5 @@ export const {
   usePlaceOrderMutation,
   useCancelOrderMutation,
   useDeleteAddressMutation,
+  useUpdateAddressMutation,
 } = userProfileApiQueries;

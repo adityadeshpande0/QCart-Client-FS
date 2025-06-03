@@ -84,7 +84,7 @@ const Navbar: React.FC = () => {
           </Flex>
 
           <div className="flex space-x-4 items-center">
-            <Link to="/user-profile">
+            <Link to="/user-profile/profile">
               <CustomAvatar
                 name={user?.name || "User"}
                 src={user?.profilePicture || "profile image"}

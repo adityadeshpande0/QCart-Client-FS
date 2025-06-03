@@ -20,6 +20,7 @@ import Profile from "@/experiments/Profile";
 import CartDrawer from "@/components/cart/CartDrawer";
 import ManageOrders from "@/admin-related/manage-orders/ManageOrders";
 import AdminNavigationMenu from "@/admin-related/admin-menu/AdminNavigationMenu";
+import AddNewAddress from "@/screens/user-profile/components/AddNewAddress";
 
 const AppRouter: React.FC = () => {
   const location = useLocation();
@@ -52,6 +53,7 @@ const AppRouter: React.FC = () => {
               <Route path="/user-profile" element={<UserProfile />}>
                 <Route path="orders" element={<OrdersSection />} />
                 <Route path="addresses" element={<AdressesSection />} />
+                <Route path="addNewAddress" element={<AddNewAddress />} />
                 <Route path="Profile" element={<ProfileSection />} />
               </Route>
             </Route>
@@ -59,7 +61,7 @@ const AppRouter: React.FC = () => {
         </AnimatePresence>
       </div>
       <CartDrawer />
-      <AdminNavigationMenu/>
+      <AdminNavigationMenu />
     </>
   );
 };

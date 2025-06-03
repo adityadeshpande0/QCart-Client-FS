@@ -40,7 +40,7 @@ const Login: React.FC = () => {
           if (response?.user?.isAdmin) {
             navigation("/admin-dashboard");
           } else {
-            navigation("/user-profile");
+            navigation("/");
           }
           handleResetFields();
         })

@@ -10,6 +10,7 @@ import {
 } from "@/screens/slices/cartSlice";
 import { usePlaceOrderMutation } from "@/screens/user-profile/userProfileApiQueries";
 import {
+  Alert,
   Box,
   Button,
   CloseButton,
@@ -17,10 +18,13 @@ import {
   Portal,
   Text,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const CartDrawer = () => {
   const isLoggedIn = localStorage.getItem("token") !== null;
+  const [showAddressError, setShowAddressError] = useState(false);
+
   const [placeOrder] = usePlaceOrderMutation();
   const dispatch = useAppDispatch();
 
@@ -44,11 +48,18 @@ const CartDrawer = () => {
     try {
       const response = await placeOrder(payload).unwrap();
       console.log("Order placed successfully:", response);
-
       dispatch(closeCart());
       dispatch(clearCart());
     } catch (error) {
       console.error("Error placing order:", error);
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "status" in error &&
+        (error as any).status === 402
+      ) {
+        setShowAddressError(true);
+      }
     }
   };
 
@@ -67,6 +78,36 @@ const CartDrawer = () => {
             </Drawer.Header>
 
             <Drawer.Body className="px-4 py-5 space-y-4 text-sm text-gray-700">
+              {showAddressError && (
+                <Alert.Root
+                  status="warning"
+                  flexDirection="column"
+                  alignItems="flex-start"
+                  borderRadius="md"
+                  boxShadow="md"
+                  className="mb-4 p-4"
+                >
+                  <Box fontWeight="semibold" fontSize="sm">
+                    Address is missing
+                  </Box>
+                  <Text fontSize="xs" mt={1}>
+                    Please add your address to proceed with the order.
+                  </Text>
+                  <Link to="/user-profile/addNewAddress" className="w-full">
+                    <Button
+                      onClick={() => {
+                        handleClose();
+                        setShowAddressError(false);
+                      }}
+                      size="sm"
+                      mt={3}
+                      className="bg-black text-white hover:bg-gray-800 w-full"
+                    >
+                      Go to Profile
+                    </Button>
+                  </Link>
+                </Alert.Root>
+              )}
               {isLoggedIn ? (
                 cartData.map((item: any) => (
                   <Box
