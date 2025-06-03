@@ -46,22 +46,49 @@ const CartDrawer = () => {
   };
 
   const handleCheckout = async () => {
-    try {
-      const response = await placeOrder(payload).unwrap();
-      console.log("Order placed successfully:", response);
-      dispatch(closeCart());
-      dispatch(clearCart());
-    } catch (error) {
-      console.error("Error placing order:", error);
-      if (
-        typeof error === "object" &&
-        error !== null &&
-        "status" in error &&
-        (error as any).status === 402
-      ) {
-        setShowAddressError(true);
-      }
+    dispatch(closeCart());
+    const res = await loadRazorpayScript();
+    if (!res) {
+      alert("Razorpay SDK failed to load. Check your internet connection.");
+      return;
     }
+
+    const totalAmount = cartData.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
+
+    const options = {
+      key: "rzp_test_hk9MX26ZRJ6W3i",
+      amount: totalAmount * 100,
+      currency: "INR",
+      name: "Quick Cart",
+      description: "Order Payment",
+
+      handler: async function (response: any) {
+        console.log("Payment success", response);
+        try {
+          const orderResponse = await placeOrder(payload).unwrap();
+          console.log("Order placed successfully", orderResponse);
+          dispatch(closeCart());
+          dispatch(clearCart());
+          alert("Order placed successfully!");
+        } catch (error) {
+          console.error("Order placement failed:", error);
+        }
+      },
+      prefill: {
+        name: "Test User",
+        email: "test@example.com",
+        contact: "9999999999",
+      },
+      theme: {
+        color: "#000000",
+      },
+    };
+
+    const paymentObject = new (window as any).Razorpay(options);
+    paymentObject.open();
   };
 
   return (
@@ -219,3 +246,22 @@ const CartDrawer = () => {
 };
 
 export default CartDrawer;
+
+function loadRazorpayScript(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (document.getElementById("razorpay-sdk")) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.id = "razorpay-sdk";
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => {
+      resolve(true);
+    };
+    script.onerror = () => {
+      resolve(false);
+    };
+    document.body.appendChild(script);
+  });
+}
