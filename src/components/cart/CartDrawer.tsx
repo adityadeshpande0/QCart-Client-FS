@@ -30,6 +30,7 @@ const CartDrawer = () => {
 
   const isOpen = useAppSelector((state: RootState) => state.cartReducer.isOpen);
   const cartData = useAppSelector(selectCartItems);
+  console.log(cartData);
   const address = useAppSelector(selectAddress);
 
   const handleClose = () => {
@@ -177,7 +178,31 @@ const CartDrawer = () => {
             </Drawer.Body>
 
             {cartData.length > 0 && isLoggedIn && (
-              <Drawer.Footer className="flex justify-between items-center gap-4 px-4 py-4 border-t">
+              <Drawer.Footer className="flex flex-col gap-3 px-4 py-4 border-t">
+                {cartData.length !== 0 && (
+                  <Box className="flex flex-col gap-1 w-full">
+                    <Box className="flex justify-between w-full">
+                      <Text className="text-gray-800 font-medium">
+                        Total Items:
+                      </Text>
+                      <Text className="text-gray-800 font-semibold">
+                        {cartData.reduce((acc, item) => acc + item.quantity, 0)}
+                      </Text>
+                    </Box>
+                    <Box className="flex justify-between w-full">
+                      <Text className="text-gray-800 font-medium">
+                        Total Price:
+                      </Text>
+                      <Text className="text-gray-800 font-semibold">
+                        ₹
+                        {cartData.reduce(
+                          (acc, item) => acc + item.price * item.quantity,
+                          0
+                        )}
+                      </Text>
+                    </Box>
+                  </Box>
+                )}
                 <Button
                   onClick={handleCheckout}
                   className="w-full bg-black text-white hover:bg-gray-800 transition"
