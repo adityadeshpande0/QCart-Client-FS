@@ -12,10 +12,10 @@ import {
 import { LuGift, LuShoppingBag, LuMapPin, LuUser } from "react-icons/lu";
 import { useGetUserProfileQueryQuery } from "@/app/commonApiQuery";
 import CustomAvatar from "@/components/reusables/Avatar";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 const UserProfile: React.FC = () => {
-  const navigate = useNavigate();
+
   const { data: user, isLoading } = useGetUserProfileQueryQuery({});
 
   if (isLoading || !user) {
@@ -111,7 +111,7 @@ const UserProfile: React.FC = () => {
             variant="ghost"
             onClick={() => {
               localStorage.removeItem("token");
-              navigate("/");
+              window.location.href = "/";
             }}
             color="gray.600"
             _hover={{ textDecoration: "underline" }}

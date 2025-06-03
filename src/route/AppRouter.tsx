@@ -19,6 +19,7 @@ import MainScreen from "@/screens/dashboard/MainScreen";
 import Profile from "@/experiments/Profile";
 import CartDrawer from "@/components/cart/CartDrawer";
 import ManageOrders from "@/admin-related/manage-orders/ManageOrders";
+import AdminNavigationMenu from "@/admin-related/admin-menu/AdminNavigationMenu";
 
 const AppRouter: React.FC = () => {
   const location = useLocation();
@@ -58,6 +59,7 @@ const AppRouter: React.FC = () => {
         </AnimatePresence>
       </div>
       <CartDrawer />
+      <AdminNavigationMenu/>
     </>
   );
 };

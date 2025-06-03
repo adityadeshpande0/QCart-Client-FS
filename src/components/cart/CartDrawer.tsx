@@ -16,29 +16,17 @@ import {
   Drawer,
   Portal,
   Text,
-  useDisclosure,
 } from "@chakra-ui/react";
-import { forwardRef, useImperativeHandle } from "react";
 import { Link } from "react-router-dom";
 
-export interface CartDrawerHandle {
-  openDrawer: () => void;
-}
-
-const CartDrawer = forwardRef<CartDrawerHandle>((_, ref) => {
+const CartDrawer = () => {
   const isLoggedIn = localStorage.getItem("token") !== null;
-  console.log(isLoggedIn);
   const [placeOrder] = usePlaceOrderMutation();
   const dispatch = useAppDispatch();
-  const { onOpen } = useDisclosure();
 
   const isOpen = useAppSelector((state: RootState) => state.cartReducer.isOpen);
   const cartData = useAppSelector(selectCartItems);
   const address = useAppSelector(selectAddress);
-
-  useImperativeHandle(ref, () => ({
-    openDrawer: onOpen,
-  }));
 
   const handleClose = () => {
     dispatch(closeCart());
@@ -67,7 +55,6 @@ const CartDrawer = forwardRef<CartDrawerHandle>((_, ref) => {
   return (
     <Drawer.Root open={isOpen}>
       <Portal>
-        <Drawer.Backdrop className="bg-black/30 backdrop-blur-sm" />
         <Drawer.Positioner>
           <Drawer.Content className="w-full max-w-md bg-white rounded-l-2xl shadow-xl">
             <Drawer.Header className="flex items-center justify-between px-4 py-3 border-b">
@@ -163,6 +150,6 @@ const CartDrawer = forwardRef<CartDrawerHandle>((_, ref) => {
       </Portal>
     </Drawer.Root>
   );
-});
+};
 
 export default CartDrawer;

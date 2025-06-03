@@ -14,11 +14,13 @@ interface CartItem {
 interface CartState {
   items: CartItem[];
   isOpen: boolean;
+  adminNavmenuIsOpen?: boolean;
 }
 
 const initialState: CartState = {
   items: [],
   isOpen: false,
+  adminNavmenuIsOpen: false,
 };
 
 const cartSlice = createSlice({
@@ -55,6 +57,9 @@ const cartSlice = createSlice({
     clearCart: (state) => {
       state.items = [];
     },
+    toggleAdminNavmenu: (state) => {
+      state.adminNavmenuIsOpen = !state.adminNavmenuIsOpen;
+    },
   },
 });
 
@@ -65,9 +70,13 @@ export const {
   closeCart,
   openCart,
   clearCart,
+  toggleAdminNavmenu,
 } = cartSlice.actions;
 
 export const selectCartItems = (state: RootState) => state.cartReducer.items;
+export const selectIsCartOpen = (state: RootState) => state.cartReducer.isOpen;
+export const selectAdminNavmenuIsOpen = (state: RootState) =>
+  state.cartReducer.adminNavmenuIsOpen;
 export const selectCartTotalCount = (state: RootState) =>
   state.cartReducer.items.reduce((sum, item) => sum + item.quantity, 0);
 
