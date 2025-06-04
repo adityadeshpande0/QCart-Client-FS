@@ -21,6 +21,7 @@ import CartDrawer from "@/components/cart/CartDrawer";
 import ManageOrders from "@/admin-related/manage-orders/ManageOrders";
 import AdminNavigationMenu from "@/admin-related/admin-menu/AdminNavigationMenu";
 import AddNewAddress from "@/screens/user-profile/components/AddNewAddress";
+import AdminOnly from "./AdminOnly";
 
 const AppRouter: React.FC = () => {
   const location = useLocation();
@@ -39,17 +40,23 @@ const AppRouter: React.FC = () => {
             <Route path="/signup" element={<Register />} />
             <Route path="/exp" element={<Profile />} />
             <Route element={<ProtectedRoute />}>
-              <Route
-                path="/manage-products"
-                element={<ManageProductsDashboard />}
-              />
-              <Route path="/manage-orders" element={<ManageOrders />} />
-              <Route
-                path="/manage-products/manage"
-                element={<ProductManagement />}
-              />
-              <Route path="/manage-products/add" element={<AddNewProducts />} />
-              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route element={<AdminOnly />}>
+                <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                <Route path="/manage-orders" element={<ManageOrders />} />
+                <Route
+                  path="/manage-products"
+                  element={<ManageProductsDashboard />}
+                />
+                <Route
+                  path="/manage-products/manage"
+                  element={<ProductManagement />}
+                />
+                <Route
+                  path="/manage-products/add"
+                  element={<AddNewProducts />}
+                />
+              </Route>
+
               <Route path="/user-profile" element={<UserProfile />}>
                 <Route path="orders" element={<OrdersSection />} />
                 <Route path="addresses" element={<AdressesSection />} />

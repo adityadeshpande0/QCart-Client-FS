@@ -25,7 +25,14 @@ import { LuCheck, LuPackage, LuShip } from "react-icons/lu";
 import { useAppSelector } from "@/app/hooks";
 import { selectUser } from "@/screens/auth/authSlice";
 
-// ⛓️ Connect socket (with credentials)
+// PDF generation
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
+// Extend jsPDF with autoTable
+(jsPDF as any).autoTable = autoTable;
+
+// Socket connection
 const socket = io(import.meta.env.VITE_API_BASE_URL, {
   withCredentials: true,
 });
@@ -38,6 +45,7 @@ const OrdersSection: React.FC = () => {
   const userData = useAppSelector(selectUser);
 
   const userId = userData?._id;
+
   useEffect(() => {
     socket.on("order-status-updated", ({ orderId, status }) => {
       console.log(`Order ${orderId} status changed to ${status}`);
@@ -49,6 +57,13 @@ const OrdersSection: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (userId) {
+      socket.connect();
+      socket.emit("join-user", userId);
+    }
+  }, [userId]);
+
   const handleCancelOrder = (orderId: string) => {
     cancelOrder(orderId)
       .unwrap()
@@ -56,12 +71,41 @@ const OrdersSection: React.FC = () => {
         refetch();
       });
   };
-  useEffect(() => {
-    if (userId) {
-      socket.connect();
-      socket.emit("join-user", userId);
-    }
-  }, [userId]);
+
+  const generateInvoicePDF = (order: any) => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Invoice", 105, 20, { align: "center" });
+
+    doc.setFontSize(12);
+    doc.text(`Order ID: ${order._id}`, 14, 40);
+    doc.text(`Date: ${new Date(order.createdAt).toLocaleString()}`, 14, 50);
+    doc.text(`Status: ${order.status}`, 14, 60);
+
+    const tableColumn = ["Product", "Quantity", "Price", "Subtotal"];
+    const tableRows = order.products.map((item: any) => [
+      item.productId?.title || "Unknown",
+      item.quantity,
+      `₹ ${item.price}`,
+      `₹ ${item.subtotal}`,
+    ]);
+
+    // Register autoTable plugin properly
+    autoTable(doc, {
+      startY: 70,
+      head: [tableColumn],
+      body: tableRows,
+    });
+
+    doc.text(
+      `Total: ₹ ${order.totalAmount}`,
+      14,
+      (doc as any).lastAutoTable.finalY + 20
+    );
+
+    doc.save(`invoice_${order._id}.pdf`);
+  };
 
   if (isLoading) {
     return (
@@ -231,6 +275,17 @@ const OrdersSection: React.FC = () => {
                         ₹ {order.totalAmount}
                       </Text>
                     </HStack>
+                  </Flex>
+                  <Flex justify="space-between" align="center" mt={3}>
+                    <Button
+                      size="sm"
+                      colorScheme="blue"
+                      className="bg-blue-500 px-4 text-white hover:bg-blue-800 transition"
+                      disabled={order.status !== "Delivered"}
+                      onClick={() => generateInvoicePDF(order)}
+                    >
+                      Generate Invoice
+                    </Button>
                   </Flex>
                   <Collapsible.Root
                     open={openTimeline}
